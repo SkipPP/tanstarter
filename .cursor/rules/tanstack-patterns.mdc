@@ -1,0 +1,27 @@
+---
+description: TanStack Start routing, data fetching, and server function patterns for this project
+alwaysApply: true
+---
+
+# TanStack Patterns
+
+- **Route groups**:
+  - Protected routes live under `apps/web/src/routes/_auth/**` and are enforced by `beforeLoad` in the `_auth` layout.
+  - Guest-only routes live under `apps/web/src/routes/_guest/**` and are enforced by `beforeLoad` in the `_guest` layout.
+- **Loaders are isomorphic**:
+  - Loaders run on both server and client, so they must not access server-only APIs (like `fs`, direct DB clients) directly.
+  - When a loader needs server data, call a server function instead of touching server-only modules.
+- **Prefer TanStack Query for data fetching**:
+  - For read-style server functions, wrap them in TanStack Query (`queryOptions` + `ensureQueryData`) so data fetching is cached and reusable across routes and components.
+  - Keep loader logic thin and focused on orchestrating queries rather than doing heavy work itself.
+- **Environment shaking**:
+  - TanStack Start strips code from the client bundle unless it is reachable from a `createServerFn` handler.
+  - Server-only code (database, `fs`, etc.) should live inside `createServerFn` handlers or `*.server.ts` files, not in shared modules imported by client code.
+- **Importing server functions**:
+  - Server functions wrapped in `createServerFn` can be imported statically anywhere; avoid dynamic imports for server-only modules.
+  - Prefix server function exports with `$` (e.g. `$getUser`, `$listRoles`) so it's obvious they are server calls.
+- **Server-only import rules**:
+  - Direct server-only code must only be imported inside `createServerFn` handlers or `*.server.ts` files.
+  - Components and client-side hooks should depend on server functions, not on raw server-only modules.
+- **Auth-specific patterns**:
+  - For route-guarding and auth middleware patterns, follow the dedicated auth conventions rule (from `.agents/auth.md`).

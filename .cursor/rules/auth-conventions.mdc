@@ -1,0 +1,20 @@
+---
+description: Auth architecture, route guards, and server function authorization patterns
+alwaysApply: true
+---
+
+# Auth Conventions
+
+- **Auth architecture**:
+  - Better Auth configuration lives in `packages/auth/src/auth.ts`.
+  - Shared auth utilities live in `packages/auth/src/tanstack/*`.
+  - In components, prefer the shared hooks (`useAuth`, `useAuthSuspense`) from `packages/auth/src/tanstack/hooks.ts` so components reuse the same auth data as route loaders.
+- **Route guards**:
+  - Protected routes live under `apps/web/src/routes/_auth/**` and are guarded by the `_auth` layout’s `beforeLoad`, which calls `ensureQueryData(authQueryOptions())`.
+  - The `_auth` layout exposes `{ user }` via router context; child loaders should use this context instead of refetching auth.
+  - Guest-only routes live under `apps/web/src/routes/_guest/**` and are guarded by the `_guest` layout’s `beforeLoad`, which redirects authenticated users away from login/signup.
+- **Server functions and mutations**:
+  - Server functions can be called from both server and client; on the client they behave like RPC calls via HTTP.
+  - Treat protected server functions like protected API routes: they must always enforce authorization on the server side.
+  - When auth is required, always apply `authMiddleware` from `packages/auth/src/tanstack/middleware.ts`, even if the route itself is already under `_auth`.
+  - Route-level guards prevent unauthorized page rendering/navigation but do not replace server-side authorization; middleware-provided user context is the source of truth.

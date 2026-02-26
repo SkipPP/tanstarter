@@ -1,0 +1,20 @@
+---
+description: TypeScript coding conventions for this project
+globs: **/*.{ts,tsx}
+alwaysApply: false
+---
+
+# TypeScript Conventions
+
+- **Avoid type casting**:
+  - Do not use manual generic type parameters (`<Type>`), `as` assertions, or `satisfies` unless there is no better option.
+  - When you feel the need to cast, first ask whether the source types (schemas, function signatures, API definitions) can be improved instead.
+- **Prefer type inference**:
+  - Infer types from schemas and validation libraries (for example, Zod), then from function return types and API responses.
+  - Fix types at the source and let usage sites rely on inference rather than asserting types locally.
+  - Example: prefer `const result = api.getData()` over `const result = api.getData() as MyType`.
+- **Generic type parameter naming**:
+  - Prefix all generic type parameters with `T` (for example, `T`, `TArgs`, `TReturn`, `TData`, `TError`, `TKey`, `TValue`).
+  - Example:
+    - Bad: `function withCapability<Args extends unknown[], R>(...)`.
+    - Good: `function withCapability<TArgs extends unknown[], TReturn>(...)`.

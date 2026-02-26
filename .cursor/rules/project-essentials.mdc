@@ -1,0 +1,24 @@
+---
+description: Project-wide essentials and how other rules fit together
+alwaysApply: true
+---
+
+# Agent Essentials
+
+- **Stack**:
+  - TypeScript + React (TanStack Start) in a `pnpm` + Turborepo monorepo.
+  - Uses Drizzle ORM, `shadcn/ui`, and Better Auth.
+- **UI components**:
+  - Prefer shared components from `@repo/ui` whenever possible.
+  - When a new primitive is needed, add it via the shadcn CLI: `pnpm ui add <component>`.
+- **Package management**:
+  - Always use `pnpm` as the package manager.
+  - Use shared `pnpm` catalog versions configured in `pnpm-workspace.yaml` via `catalog:`.
+- **Build vs lint workflow**:
+  - Do not run full builds after every small change.
+  - If `pnpm lint` passes, generally assume changes work and avoid unnecessary `pnpm build` runs.
+- **Topic-specific rules**:
+  - TanStack routing/data patterns: see the TanStack patterns rule.
+  - Auth conventions (route guards, middleware, utilities): see the auth conventions rule.
+  - TypeScript conventions (casting, inference): see the TypeScript conventions rule.
+  - Workflow commands and validation approach: see the workflow rule.

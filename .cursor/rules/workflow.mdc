@@ -1,0 +1,19 @@
+---
+description: Project workflow commands, testing strategy, and formatting conventions
+alwaysApply: true
+---
+
+# Workflow
+
+- **Build commands**:
+  - Use `pnpm build` only when debugging build/bundler issues or verifying production output.
+  - Prefer `pnpm lint` as the main feedback loop; if lint passes, assume changes work rather than rebuilding constantly.
+- **Dev server**:
+  - Use `pnpm dev` to run the app in watch mode; it is expected to run indefinitely during development.
+- **Database tooling**:
+  - Use `pnpm db` for Drizzle Kit commands (for example, `pnpm db generate` to generate migrations).
+- **Testing**:
+  - There is currently no testing framework configured; rely on type-aware linting (`pnpm lint`) and manual verification for now.
+- **Formatting**:
+  - Oxfmt is configured and can be run with `pnpm format`.
+  - Oxfmt runs automatically via Husky pre-commit hooks, so manual formatting is usually unnecessary unless debugging formatting issues.
