@@ -13,6 +13,7 @@
     "@fontsource-variable/inter": "catalog:",
     "@repo/auth": "workspace:*",
     "@repo/db": "workspace:*",
+    "@repo/mail": "workspace:*",
     "@repo/ui": "workspace:*",
     "@tabler/icons-react": "catalog:",
     "@tanstack/react-form-start": "catalog:",

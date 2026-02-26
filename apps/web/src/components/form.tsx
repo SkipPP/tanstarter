@@ -200,6 +200,7 @@ export const SelectField = ({ label, placeholder, description, options }: Select
 
         {isInvalid && <FieldError errors={field.state.meta.errors} />}
       </FieldContent>
+
       <Select name={field.name} value={field.state.value} onValueChange={field.handleChange}>
         <SelectTrigger id={field.name} aria-invalid={isInvalid}>
           <SelectValue placeholder={placeholder} />
