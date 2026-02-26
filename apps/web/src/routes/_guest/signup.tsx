@@ -1,7 +1,9 @@
 import authClient from "@repo/auth/auth-client";
 import { authQueryOptions } from "@repo/auth/tanstack/queries";
-import { Field, FieldDescription, FieldGroup } from "@repo/ui/components/field";
+import { Button } from "@repo/ui/components/button";
+import { Field, FieldGroup } from "@repo/ui/components/field";
 import { cn } from "@repo/ui/lib/utils";
+import { IconArrowLeft } from "@tabler/icons-react";
 import { revalidateLogic } from "@tanstack/react-form-start";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
@@ -31,6 +33,7 @@ function SignupForm({ className, ...props }: React.ComponentPropsWithoutRef<"for
   const id = useId();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
   const { redirectUrl } = Route.useRouteContext();
 
   const form = useAppForm({
@@ -86,12 +89,12 @@ function SignupForm({ className, ...props }: React.ComponentPropsWithoutRef<"for
         </div>
 
         <form.AppField name="name">
-          {(field) => <field.InputField label="Name" placeholder="John Doe" type="text" />}
+          {(field) => <field.InputField label="Name" placeholder="John Doe" type="text" required />}
         </form.AppField>
 
         <form.AppField name="email">
           {(field) => (
-            <field.InputField label="Email" placeholder="mail@example.com" type="email" />
+            <field.InputField label="Email" placeholder="mail@example.com" type="email" required />
           )}
         </form.AppField>
 
@@ -99,8 +102,9 @@ function SignupForm({ className, ...props }: React.ComponentPropsWithoutRef<"for
           {(field) => (
             <field.PasswordField
               label="Password"
-              placeholder="************"
+              placeholder="•••••••••••••"
               autoComplete="new-password"
+              required
             />
           )}
         </form.AppField>
@@ -109,27 +113,23 @@ function SignupForm({ className, ...props }: React.ComponentPropsWithoutRef<"for
           {(field) => (
             <field.PasswordField
               label="Confirm Password"
-              placeholder="************"
+              placeholder="•••••••••••••"
               autoComplete="new-password"
+              required
             />
           )}
         </form.AppField>
 
         <form.AppForm>
-          <form.SubmitButton label="Sign up" />
+          <form.SubmitButton label="Create Account" loadingLabel="Creating account..." />
         </form.AppForm>
 
         <Field>
-          <FieldDescription className="text-center">
-            Already have an account ?{" "}
-            <Link
-              to="/login"
-              data-disabled={form.state.isSubmitting}
-              className="underline underline-offset-4 data-[disabled=true]:pointer-events-none"
-            >
-              Sign in
+          <Button asChild variant="link" size="sm" className="text-muted-foreground">
+            <Link to="/login">
+              <IconArrowLeft /> Already have an account ? Sign in
             </Link>
-          </FieldDescription>
+          </Button>
         </Field>
       </FieldGroup>
     </form>

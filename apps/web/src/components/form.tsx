@@ -30,6 +30,7 @@ import { Switch } from "@repo/ui/components/switch";
 import { Textarea } from "@repo/ui/components/textarea";
 import { IconEye, IconEyeOff } from "@tabler/icons-react";
 import { createFormHook, createFormHookContexts } from "@tanstack/react-form-start";
+import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 
 export const { fieldContext, formContext, useFieldContext, useFormContext } =
@@ -40,9 +41,16 @@ type InputFieldProps = {
   readonly placeholder: string;
   readonly type: string;
   readonly description?: string;
+  readonly required?: boolean;
 };
 
-export const InputField = ({ label, placeholder, type, description }: InputFieldProps) => {
+export const InputField = ({
+  label,
+  placeholder,
+  type,
+  description,
+  required,
+}: InputFieldProps) => {
   const field = useFieldContext<string>();
 
   const [error] = field.state.meta.errors;
@@ -50,7 +58,9 @@ export const InputField = ({ label, placeholder, type, description }: InputField
 
   return (
     <Field data-invalid={isInvalid}>
-      <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
+      <FieldLabel htmlFor={field.name}>
+        {label} {required && <span className="text-destructive">*</span>}
+      </FieldLabel>
 
       <Input
         id={field.name}
@@ -76,6 +86,8 @@ type PasswordFieldProps = {
   readonly placeholder: string;
   readonly description?: string;
   readonly autoComplete?: string;
+  readonly action?: React.ReactNode;
+  readonly required?: boolean;
 };
 
 export const PasswordField = ({
@@ -83,6 +95,8 @@ export const PasswordField = ({
   placeholder,
   description,
   autoComplete,
+  action,
+  required,
 }: PasswordFieldProps) => {
   const field = useFieldContext<string>();
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -92,7 +106,10 @@ export const PasswordField = ({
 
   return (
     <Field data-invalid={isInvalid}>
-      <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
+      <FieldLabel htmlFor={field.name}>
+        {label} {required && <span className="text-destructive">*</span>}
+        {action && action}
+      </FieldLabel>
 
       <InputGroup>
         <InputGroupInput
@@ -363,19 +380,30 @@ export const SwitchField = ({ label, description }: SwitchFieldProps) => {
 
 type SubmitButtonProps = {
   readonly label: string;
+  readonly loadingLabel?: string;
 };
 
-export const SubmitButton = ({ label }: SubmitButtonProps) => {
+export const SubmitButton = ({ label, loadingLabel }: SubmitButtonProps) => {
   const form = useFormContext();
 
   return (
     <form.Subscribe selector={(state) => [state.isSubmitting, state.canSubmit]}>
       {([isSubmitting, canSubmit]) => (
         <Button type="submit" disabled={isSubmitting || !canSubmit}>
-          {isSubmitting ? "Submitting..." : label}
+          {isSubmitting ? (loadingLabel ?? "Submitting...") : label}
         </Button>
       )}
     </form.Subscribe>
+  );
+};
+
+export const TermsOfServiceField = () => {
+  return (
+    <Field>
+      <FieldDescription className="text-center text-xs">
+        By clicking continue, you agree to our <Link to="/">Terms of Service</Link>.
+      </FieldDescription>
+    </Field>
   );
 };
 
@@ -392,6 +420,7 @@ export const { useAppForm } = createFormHook({
   },
   formComponents: {
     SubmitButton,
+    TermsOfServiceField,
   },
   fieldContext,
   formContext,

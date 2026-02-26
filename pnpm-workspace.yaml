@@ -5,8 +5,6 @@ packages:
 
 catalog:
   '@better-auth/drizzle-adapter': https://pkg.pr.new/better-auth/better-auth/@better-auth/drizzle-adapter@6913
-  '@commitlint/cli': ^20.4.2
-  '@commitlint/config-conventional': ^20.4.2
   '@fontsource-variable/inter': ^5.2.8
   '@tabler/icons-react': ^3.36.0
   '@tailwindcss/vite': ^4.2.1

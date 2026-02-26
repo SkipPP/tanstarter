@@ -10,9 +10,11 @@ function AppLayout() {
     <div className="flex min-h-svh flex-col items-center justify-center gap-10 p-2">
       <div className="flex flex-col items-center gap-2">
         <h1 className="text-3xl font-bold sm:text-4xl">App Layout</h1>
+
         <pre className="mb-4 rounded-md border bg-card p-1 text-xs text-card-foreground">
           routes/_auth/app/route.tsx
         </pre>
+
         <div className="mb-4 flex flex-col items-center gap-2 text-sm text-foreground/80">
           This is a protected layout from the _auth pathless layout route:
           <pre className="rounded-md border bg-card p-1 text-xs text-card-foreground">
