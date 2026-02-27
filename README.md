@@ -25,6 +25,7 @@ A minimal monorepo starter for 🏝️ TanStack Start.
 │    ├── auth                   # Better Auth
 │    ├── db                     # Drizzle ORM + Drizzle Kit + PostgreSQL
 │    └── ui                     # shadcn/ui primitives & utils
+│    └── mail                   # Resend
 ├── tooling
 │    └── tsconfig               # Shared TypeScript configuration
 ├── turbo.json
@@ -48,7 +49,7 @@ A minimal monorepo starter for 🏝️ TanStack Start.
 1. Clone this repository with gitpick, then install dependencies:
 
    ```sh
-   npx gitpick dotnize/react-tanstarter/tree/next myproject
+   npx gitpick skippp/tanstarter myproject
    cd myproject
 
    pnpm install
@@ -70,15 +71,6 @@ A minimal monorepo starter for 🏝️ TanStack Start.
    ```
 
    The development server should now be running at [http://localhost:3000](http://localhost:3000).
-
-> [!TIP]
-> If you want to run a local Postgres instance via Docker Compose with the dev server, you can use the [dev.sh](./dev.sh) script:
->
-> ```sh
-> ./dev.sh # runs "pnpm dev"
-> # or
-> ./dev.sh web # runs pnpm dev:web
-> ```
 
 ## Deploying to production
 
@@ -107,12 +99,12 @@ This template is configured for **[pnpm](https://pnpm.io/)** by default. Check t
 - **`deps`** - Selectively upgrade dependencies via taze.
 
 > [!NOTE]
-> To switch to another package manager (e.g., bun or npm), update the commands in your `package.json` files, [`dev.sh`](./dev.sh), and git hooks in [`.husky/`](./.husky/). You'll also need to replace or remove [`pnpm-workspace.yaml`](./pnpm-workspace.yaml), which uses pnpm [catalogs](https://pnpm.io/catalogs). Bun and Yarn have their own equivalents, but the file formats may differ.
+> To switch to another package manager (e.g., bun or npm), update the commands in your `package.json` files. You'll also need to replace or remove [`pnpm-workspace.yaml`](./pnpm-workspace.yaml), which uses pnpm [catalogs](https://pnpm.io/catalogs). Bun and Yarn have their own equivalents, but the file formats may differ.
 
 #### Utilities
 
 - [`/auth/src/tanstack/middleware.ts`](./packages/auth/src/tanstack/middleware.ts) - Sample middleware for forcing authentication on server functions.
-- [`/web/src/components/theme-toggle.tsx`](./apps/web/src/components/theme-toggle.tsx), [`/ui/lib/theme-provider.tsx`](./packages/ui/lib/theme-provider.tsx) - A theme toggle and provider for toggling between light and dark mode.
+- [`/web/src/components/theme-toggle.tsx`](./apps/web/src/components/theme-toggle.tsx) - A theme toggle for toggling between light and dark mode.
 
 ## Third‑party integrations
 
@@ -122,10 +114,6 @@ The template is kept minimal by default, but is compatible with many third‑par
 - [Resend](https://resend.com/) - email
 - [Polar](https://polar.sh/) - billing
 - ... and many more!
-
-## License
-
-[MIT](./LICENSE)
 
 ## Ecosystem
 
