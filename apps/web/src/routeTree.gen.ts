@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as GuestRouteRouteImport } from './routes/_guest/route'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as GuestVerifyEmailRouteImport } from './routes/_guest/verify-email'
 import { Route as GuestSignupRouteImport } from './routes/_guest/signup'
 import { Route as GuestResetPasswordRouteImport } from './routes/_guest/reset-password'
 import { Route as GuestLoginRouteImport } from './routes/_guest/login'
@@ -32,6 +33,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const GuestVerifyEmailRoute = GuestVerifyEmailRouteImport.update({
+  id: '/verify-email',
+  path: '/verify-email',
+  getParentRoute: () => GuestRouteRoute,
 } as any)
 const GuestSignupRoute = GuestSignupRouteImport.update({
   id: '/signup',
@@ -76,6 +82,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof GuestLoginRoute
   '/reset-password': typeof GuestResetPasswordRoute
   '/signup': typeof GuestSignupRoute
+  '/verify-email': typeof GuestVerifyEmailRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/app/': typeof AuthAppIndexRoute
 }
@@ -85,6 +92,7 @@ export interface FileRoutesByTo {
   '/login': typeof GuestLoginRoute
   '/reset-password': typeof GuestResetPasswordRoute
   '/signup': typeof GuestSignupRoute
+  '/verify-email': typeof GuestVerifyEmailRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/app': typeof AuthAppIndexRoute
 }
@@ -98,6 +106,7 @@ export interface FileRoutesById {
   '/_guest/login': typeof GuestLoginRoute
   '/_guest/reset-password': typeof GuestResetPasswordRoute
   '/_guest/signup': typeof GuestSignupRoute
+  '/_guest/verify-email': typeof GuestVerifyEmailRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_auth/app/': typeof AuthAppIndexRoute
 }
@@ -110,6 +119,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/reset-password'
     | '/signup'
+    | '/verify-email'
     | '/api/auth/$'
     | '/app/'
   fileRoutesByTo: FileRoutesByTo
@@ -119,6 +129,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/reset-password'
     | '/signup'
+    | '/verify-email'
     | '/api/auth/$'
     | '/app'
   id:
@@ -131,6 +142,7 @@ export interface FileRouteTypes {
     | '/_guest/login'
     | '/_guest/reset-password'
     | '/_guest/signup'
+    | '/_guest/verify-email'
     | '/api/auth/$'
     | '/_auth/app/'
   fileRoutesById: FileRoutesById
@@ -164,6 +176,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_guest/verify-email': {
+      id: '/_guest/verify-email'
+      path: '/verify-email'
+      fullPath: '/verify-email'
+      preLoaderRoute: typeof GuestVerifyEmailRouteImport
+      parentRoute: typeof GuestRouteRoute
     }
     '/_guest/signup': {
       id: '/_guest/signup'
@@ -246,6 +265,7 @@ interface GuestRouteRouteChildren {
   GuestLoginRoute: typeof GuestLoginRoute
   GuestResetPasswordRoute: typeof GuestResetPasswordRoute
   GuestSignupRoute: typeof GuestSignupRoute
+  GuestVerifyEmailRoute: typeof GuestVerifyEmailRoute
 }
 
 const GuestRouteRouteChildren: GuestRouteRouteChildren = {
@@ -253,6 +273,7 @@ const GuestRouteRouteChildren: GuestRouteRouteChildren = {
   GuestLoginRoute: GuestLoginRoute,
   GuestResetPasswordRoute: GuestResetPasswordRoute,
   GuestSignupRoute: GuestSignupRoute,
+  GuestVerifyEmailRoute: GuestVerifyEmailRoute,
 }
 
 const GuestRouteRouteWithChildren = GuestRouteRoute._addFileChildren(

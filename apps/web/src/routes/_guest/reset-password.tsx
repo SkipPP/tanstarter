@@ -2,7 +2,7 @@ import authClient from "@repo/auth/auth-client";
 import { FieldGroup } from "@repo/ui/components/field";
 import { cn } from "@repo/ui/lib/utils";
 import { revalidateLogic } from "@tanstack/react-form-start";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useId } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -37,6 +37,7 @@ const formValidator = z
 
 function ResetPasswordForm({ className, ...props }: React.ComponentPropsWithoutRef<"form">) {
   const id = useId();
+  const navigate = useNavigate();
 
   const { token } = Route.useSearch();
 
@@ -57,8 +58,11 @@ function ResetPasswordForm({ className, ...props }: React.ComponentPropsWithoutR
           newPassword: value.password,
         },
         {
-          onSuccess: () => {
-            toast.success("Your password has been reset.");
+          onSuccess: async () => {
+            toast.success("Your password has been reset.", {
+              description: "Redirecting you to the login page...",
+            });
+            await navigate({ to: "/login" });
           },
           onError: ({ error }) => {
             toast.error(error.message || "An error occurred while resetting your password.");

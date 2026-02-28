@@ -43,6 +43,36 @@ function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"form
         },
         {
           onError: ({ error }) => {
+            if (error.status === 403) {
+              toast.error("Please verify your email address.", {
+                description: "Click the button to request a verification email.",
+                action: {
+                  label: "Request Verification Email",
+                  onClick: async () => {
+                    await authClient.sendVerificationEmail(
+                      {
+                        email: value.email,
+                        callbackURL: redirectUrl,
+                      },
+                      {
+                        onSuccess: () => {
+                          toast.success(
+                            "A verification email has been sent to your email address.",
+                          );
+                        },
+                        onError: ({ error }) => {
+                          toast.error(
+                            error.message ||
+                              "An error occurred while requesting a verification email.",
+                          );
+                        },
+                      },
+                    );
+                  },
+                },
+              });
+            }
+
             toast.error(error.message || "An error occurred while signing in.");
           },
           // better-auth seems to trigger a hard navigation on login,
@@ -101,7 +131,7 @@ function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"form
           <form.SubmitButton label="Login" loadingLabel="Logging in..." />
         </form.AppForm>
 
-        <Field>
+        <Field className="w-fit self-center">
           <Button asChild variant="link" size="sm" className="text-muted-foreground">
             <Link to="/signup">
               <IconArrowRight /> Don't have an account ? Sign up

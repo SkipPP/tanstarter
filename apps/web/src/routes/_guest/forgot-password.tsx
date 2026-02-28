@@ -83,7 +83,7 @@ function ForgotPasswordForm({ className, ...props }: React.ComponentPropsWithout
           />
         </form.AppForm>
 
-        <Field>
+        <Field className="w-fit self-center">
           <Button asChild variant="link" size="sm" className="text-muted-foreground">
             <Link to="/login">
               <IconArrowLeft /> Back to login

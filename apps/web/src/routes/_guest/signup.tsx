@@ -55,12 +55,12 @@ function SignupForm({ className, ...props }: React.ComponentPropsWithoutRef<"for
           callbackURL: redirectUrl,
         },
         {
-          onError: ({ error }) => {
-            toast.error(error.message || "An error occurred while signing up.");
-          },
           onSuccess: async () => {
             queryClient.removeQueries({ queryKey: authQueryOptions().queryKey });
             await navigate({ to: redirectUrl });
+          },
+          onError: ({ error }) => {
+            toast.error(error.message || "An error occurred while signing up.");
           },
         },
       );
@@ -124,7 +124,7 @@ function SignupForm({ className, ...props }: React.ComponentPropsWithoutRef<"for
           <form.SubmitButton label="Create Account" loadingLabel="Creating account..." />
         </form.AppForm>
 
-        <Field>
+        <Field className="w-fit self-center">
           <Button asChild variant="link" size="sm" className="text-muted-foreground">
             <Link to="/login">
               <IconArrowLeft /> Already have an account ? Sign in
