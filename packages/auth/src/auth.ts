@@ -39,7 +39,7 @@ export const auth = betterAuth({
       await resend.emails.send({
         from: "reset@urmomlovme.fr",
         to: user.email,
-        subject: "Reset your password",
+        subject: "TANSTARTER - Reset your password",
         html: `<p>Reset your password by clicking <a href="${url}">here</a></p>`,
       });
     },
@@ -54,7 +54,7 @@ export const auth = betterAuth({
       await resend.emails.send({
         from: "verify@urmomlovme.fr",
         to: user.email,
-        subject: "Verify your email",
+        subject: "TANSTARTER - Verify your email",
         html: `<p>Verify your email by clicking <a href="${url}">here</a></p>`,
       });
     },

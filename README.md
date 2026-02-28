@@ -24,8 +24,8 @@ A minimal monorepo starter for 🏝️ TanStack Start.
 ├── packages
 │    ├── auth                   # Better Auth
 │    ├── db                     # Drizzle ORM + Drizzle Kit + PostgreSQL
-│    └── ui                     # shadcn/ui primitives & utils
-│    └── mail                   # Resend
+│    ├── mail                   # Resend
+│    ├── ui                     # shadcn/ui primitives & utils
 ├── tooling
 │    └── tsconfig               # Shared TypeScript configuration
 ├── turbo.json
@@ -55,7 +55,7 @@ A minimal monorepo starter for 🏝️ TanStack Start.
    pnpm install
    ```
 
-2. Create `.env` files in [`/apps/web`](./apps/web/.env.example) and [`/packages/db`](./packages/db/.env.example) based on their respective `.env.example` files.
+2. Create `.env` files in [`/apps/web`](./apps/web/.env.example), [`/packages/mail`](./packages/mail/.env.example) and [`/packages/db`](./packages/db/.env.example) based on their respective `.env.example` files.
 
 3. Generate the initial migration with drizzle-kit, then apply to your database:
 

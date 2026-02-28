@@ -8,13 +8,13 @@ import {
 import { IconDeviceDesktop, IconMoon, IconSun } from "@tabler/icons-react";
 import { useRouteContext, useRouter } from "@tanstack/react-router";
 
-import { setThemeServerFn } from "@/lib/theme";
+import { setThemeServerFn, type Theme } from "@/lib/theme";
 
 export function ThemeToggle({ className }: { className?: string }) {
   const router = useRouter();
   const { theme } = useRouteContext({ from: "__root__" });
 
-  function toggleTheme(theme: "light" | "dark" | "system") {
+  function toggleTheme(theme: Theme) {
     setThemeServerFn({ data: theme }).then(() => router.invalidate());
   }
 
