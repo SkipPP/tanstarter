@@ -6,10 +6,6 @@
     "shadcn": {
       "command": "pnpm",
       "args": ["dlx", "shadcn@latest", "mcp"]
-    },
-    "tanstack": {
-      "command": "pnpm",
-      "args": ["dlx", "@tanstack/cli", "mcp"]
     }
   }
 }

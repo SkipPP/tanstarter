@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import z from "zod";
 
 import { useAppForm } from "@/components/form";
+import { SocialLoginButtons } from "@/components/social-login-buttons";
 
 export const Route = createFileRoute("/_guest/signup")({
   component: SignupForm,
@@ -123,9 +124,13 @@ function SignupForm({ className, ...props }: React.ComponentPropsWithoutRef<"for
           )}
         </form.AppField>
 
-        <form.AppForm>
-          <form.SubmitButton label="Create Account" loadingLabel="Creating account..." />
-        </form.AppForm>
+        <Field>
+          <form.AppForm>
+            <form.SubmitButton label="Create Account" loadingLabel="Creating account..." />
+          </form.AppForm>
+
+          <SocialLoginButtons callbackURL={redirectUrl} actionLabel="Sign up" />
+        </Field>
 
         <Field className="w-fit self-center">
           <Button asChild variant="link" size="sm" className="text-muted-foreground">

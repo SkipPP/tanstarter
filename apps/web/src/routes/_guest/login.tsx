@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import { useAppForm } from "@/components/form";
+import { SocialLoginButtons } from "@/components/social-login-buttons";
 
 export const Route = createFileRoute("/_guest/login")({
   component: LoginForm,
@@ -128,9 +129,17 @@ function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"form
           )}
         </form.AppField>
 
-        <form.AppForm>
-          <form.SubmitButton label="Login" loadingLabel="Logging in..." />
-        </form.AppForm>
+        <Field>
+          <form.AppForm>
+            <form.SubmitButton label="Login" loadingLabel="Logging in..." />
+          </form.AppForm>
+
+          <SocialLoginButtons
+            callbackURL={redirectUrl}
+            actionLabel="Login"
+            providers={["google", "github", "apple", "discord"]}
+          />
+        </Field>
 
         <Field className="w-fit self-center">
           <Button asChild variant="link" size="sm" className="text-muted-foreground">

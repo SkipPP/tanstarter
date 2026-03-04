@@ -24,4 +24,12 @@ alwaysApply: true
   - Direct server-only code must only be imported inside `createServerFn` handlers or `*.server.ts` files.
   - Components and client-side hooks should depend on server functions, not on raw server-only modules.
 - **Auth-specific patterns**:
-  - For route-guarding and auth middleware patterns, follow the dedicated auth conventions rule (from `.agents/auth.md`).
+  - For route-guarding and auth middleware patterns, follow the dedicated auth conventions rule (from `.cursor/rules/auth-conventions.mdc`).
+- **TanStack CLI for introspection** (no MCP server):
+  - Use direct CLI commands via `pnpm dlx @tanstack/cli` when needing add-ons, docs, libraries, or ecosystem data.
+  - Add `--json` for deterministic parsing. Examples:
+    - List add-ons: `tanstack create --list-add-ons --framework React --json`
+    - Add-on details: `tanstack create --addon-details <addon> --framework React --json`
+    - Libraries: `tanstack libraries --json`
+    - Search docs: `tanstack search-docs "<query>" --library start --json`
+    - Ecosystem: `tanstack ecosystem --category database --json`

@@ -32,6 +32,18 @@ export const auth = betterAuth({
     },
   },
 
+  socialProviders: {
+    github: {
+      clientId: process.env.SERVER_GITHUB_CLIENT_ID as string,
+      clientSecret: process.env.SERVER_GITHUB_CLIENT_SECRET as string,
+    },
+    google: {
+      enabled: true,
+      clientId: process.env.SERVER_GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.SERVER_GOOGLE_CLIENT_SECRET as string,
+    },
+  },
+
   // https://www.better-auth.com/docs/authentication/email-password
   emailAndPassword: {
     enabled: true,
