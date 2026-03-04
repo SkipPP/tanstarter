@@ -12,13 +12,56 @@ import { Kbd } from "@repo/ui/components/kbd";
 import { IconAlertCircle, IconSearch } from "@tabler/icons-react";
 import { Link } from "@tanstack/react-router";
 
+export function NotFound() {
+  return (
+    <Empty>
+      <EmptyHeader>
+        <EmptyMedia variant="icon">
+          <IconAlertCircle className="text-red-500" />
+        </EmptyMedia>
+
+        <EmptyTitle>404 - Not Found</EmptyTitle>
+
+        <EmptyDescription>
+          The page you&apos;re looking for doesn&apos;t exist. Try searching for what you need
+          below.
+        </EmptyDescription>
+      </EmptyHeader>
+
+      <EmptyContent className="flex-col items-center justify-center gap-2">
+        <InputGroup>
+          <InputGroupInput placeholder="Try searching for pages..." />
+
+          <InputGroupAddon>
+            <IconSearch />
+          </InputGroupAddon>
+
+          <InputGroupAddon align="inline-end">
+            <Kbd>/</Kbd>
+          </InputGroupAddon>
+        </InputGroup>
+
+        <div className="flex flex-row justify-center gap-2">
+          <Button type="button" onClick={() => window.history.back()}>
+            Go Back
+          </Button>
+
+          <Button asChild variant="outline">
+            <Link to="/app">Home</Link>
+          </Button>
+        </div>
+      </EmptyContent>
+    </Empty>
+  );
+}
+
 export function DefaultNotFound() {
   return (
     <main className="grid min-h-svh bg-card lg:grid-cols-2">
       <section className="flex flex-col gap-4 p-10">
         <div className="flex justify-start gap-2">
           <Link to="/" className="flex items-center gap-2 font-medium">
-            <img src="/logo-partitio-blanc.png" alt="Partitio" className="h-9 w-full" />
+            <img src="/logo-partitio-blanc.png" alt="Tanstarter" className="h-9 w-full" />
           </Link>
         </div>
 

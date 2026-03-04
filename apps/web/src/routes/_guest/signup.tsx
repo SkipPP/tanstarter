@@ -57,6 +57,9 @@ function SignupForm({ className, ...props }: React.ComponentPropsWithoutRef<"for
         {
           onSuccess: async () => {
             queryClient.removeQueries({ queryKey: authQueryOptions().queryKey });
+            toast.success("Account created successfully.", {
+              description: "Please check your email for a verification link.",
+            });
             await navigate({ to: redirectUrl });
           },
           onError: ({ error }) => {

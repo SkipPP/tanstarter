@@ -1,3 +1,4 @@
+import { AuthQueryResult } from "@repo/auth/tanstack/queries";
 import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui/components/avatar";
 import {
   DropdownMenu,
@@ -20,13 +21,11 @@ import {
   IconNotification,
   IconUserCircle,
 } from "@tabler/icons-react";
-import { useRouteContext } from "@tanstack/react-router";
 
 import { SignOutButton } from "@/components/sign-out-button";
 
-export function NavUser() {
+export function NavUser({ user }: { user: AuthQueryResult }) {
   const { isMobile } = useSidebar();
-  const { user } = useRouteContext({ from: "__root__" });
 
   if (!user) {
     return null;
@@ -41,9 +40,9 @@ export function NavUser() {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Avatar className="h-8 w-8 rounded-lg grayscale">
+              <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage src={user.image ?? undefined} alt={user.name} />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                <AvatarFallback>CN</AvatarFallback>
               </Avatar>
 
               <div className="grid flex-1 text-left text-sm leading-tight">
@@ -65,7 +64,7 @@ export function NavUser() {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage src={user.image ?? undefined} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
 
                 <div className="grid flex-1 text-left text-sm leading-tight">
@@ -96,8 +95,8 @@ export function NavUser() {
 
             <DropdownMenuSeparator />
 
-            <DropdownMenuItem>
-              <SignOutButton />
+            <DropdownMenuItem asChild>
+              <SignOutButton className="w-full justify-start" />
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

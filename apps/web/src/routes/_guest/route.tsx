@@ -37,7 +37,7 @@ function RouteComponent() {
           <Link to="/" className="flex items-center gap-2 font-medium">
             <img
               src={theme === "dark" ? "/logo-partitio-blanc.png" : "/logo-partitio.png"}
-              alt="Partitio"
+              alt="Tanstarter"
               className="h-8 w-full"
             />
           </Link>

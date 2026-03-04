@@ -2,9 +2,10 @@
 
 import type { AuthQueryResult } from "@repo/auth/tanstack/queries";
 import { Toaster } from "@repo/ui/components/sonner";
+import { TooltipProvider } from "@repo/ui/components/tooltip";
 import { TanStackDevtools } from "@tanstack/react-devtools";
-import type { QueryClient } from "@tanstack/react-query";
 import "@fontsource-variable/inter";
+import type { QueryClient } from "@tanstack/react-query";
 // import { formDevtoolsPlugin } from "@tanstack/react-form-devtools";
 import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
 import { createRootRouteWithContext, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
@@ -65,7 +66,7 @@ function RootDocument({ children }: { readonly children: React.ReactNode }) {
       </head>
 
       <body>
-        {children}
+        <TooltipProvider>{children}</TooltipProvider>
 
         <Toaster richColors theme={theme} />
 

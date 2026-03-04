@@ -1,29 +1,29 @@
 services:
   db:
     image: postgres:latest
-    container_name: crowdsec-dashboard-database
+    container_name: tanstarter-database
     restart: unless-stopped
     env_file:
       - .env
     environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB:-crowdsec-dashboard-database}
+      - POSTGRES_USER=${SERVER_POSTGRES_USER}
+      - POSTGRES_PASSWORD=${SERVER_POSTGRES_PASSWORD}
+      - POSTGRES_DB=${SERVER_POSTGRES_DB:-tanstarter-database}
     ports:
       - "5432:5432"
     volumes:
-      - crowdsec-dashboard-database-data:/var/lib/postgresql/data
+      - tanstarter-database-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres || pg_isready"]
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
-      - crowdsec-dashboard-network
+      - tanstarter-network
 
 volumes:
-  crowdsec-dashboard-database-data:
+  tanstarter-database-data:
 
 networks:
-  crowdsec-dashboard-network:
+  tanstarter-network:
     driver: bridge

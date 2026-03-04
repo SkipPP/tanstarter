@@ -5,14 +5,14 @@ import { IconLogout } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 
-export function SignOutButton() {
+export function SignOutButton({ className }: { className?: string }) {
   const router = useRouter();
   const queryClient = useQueryClient();
 
   return (
     <Button
       type="button"
-      className="w-fit"
+      className={className}
       variant="destructive"
       onClick={async () => {
         await authClient.signOut({

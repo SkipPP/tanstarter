@@ -45,9 +45,8 @@ function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"form
           onError: ({ error }) => {
             if (error.status === 403) {
               toast.error("Please verify your email address.", {
-                description: "Click the button to request a verification email.",
                 action: {
-                  label: "Request Verification Email",
+                  label: "Resend Email",
                   onClick: async () => {
                     await authClient.sendVerificationEmail(
                       {
@@ -57,13 +56,13 @@ function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"form
                       {
                         onSuccess: () => {
                           toast.success(
-                            "A verification email has been sent to your email address.",
+                            "A new verification email has been sent to your email address.",
                           );
                         },
                         onError: ({ error }) => {
                           toast.error(
                             error.message ||
-                              "An error occurred while requesting a verification email.",
+                              "An error occurred while resending the verification email.",
                           );
                         },
                       },
@@ -71,6 +70,8 @@ function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"form
                   },
                 },
               });
+
+              return;
             }
 
             toast.error(error.message || "An error occurred while signing in.");

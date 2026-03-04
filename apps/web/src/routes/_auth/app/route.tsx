@@ -1,33 +1,36 @@
-import { Button } from "@repo/ui/components/button";
-import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
+import { SidebarInset, SidebarProvider } from "@repo/ui/components/sidebar";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
+
+import { SiteHeader } from "@/components/layout/header";
+import { AppSidebar } from "@/components/layout/sidebar";
+import { NotFound } from "@/components/not-found";
 
 export const Route = createFileRoute("/_auth/app")({
   component: AppLayout,
+  notFoundComponent: NotFound,
 });
 
 function AppLayout() {
+  const { user } = Route.useRouteContext();
+
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center gap-10 p-2">
-      <div className="flex flex-col items-center gap-2">
-        <h1 className="text-3xl font-bold sm:text-4xl">App Layout</h1>
+    <SidebarProvider
+      style={
+        {
+          "--sidebar-width": "calc(var(--spacing) * 72)",
+          "--header-height": "calc(var(--spacing) * 12)",
+        } as React.CSSProperties
+      }
+    >
+      <AppSidebar user={user} variant="inset" />
 
-        <pre className="mb-4 rounded-md border bg-card p-1 text-xs text-card-foreground">
-          routes/_auth/app/route.tsx
-        </pre>
+      <SidebarInset>
+        <SiteHeader />
 
-        <div className="mb-4 flex flex-col items-center gap-2 text-sm text-foreground/80">
-          This is a protected layout from the _auth pathless layout route:
-          <pre className="rounded-md border bg-card p-1 text-xs text-card-foreground">
-            routes/_auth/route.tsx
-          </pre>
-        </div>
-
-        <Button asChild className="w-fit" size="lg">
-          <Link to="/">Back to home</Link>
-        </Button>
-      </div>
-
-      <Outlet />
-    </div>
+        <section className="@container/main flex flex-1 flex-col gap-2">
+          <Outlet />
+        </section>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }
