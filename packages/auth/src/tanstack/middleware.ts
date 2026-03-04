@@ -5,6 +5,15 @@ import { auth } from "../auth";
 
 /**
  * Middleware to enforce authentication on server requests (including server functions), and add the user to the context.
+ *
+ * @example
+ * ```ts
+ * import { createServerFn } from "@tanstack/react-start/server";
+ * import { authMiddleware } from "@repo/auth/tanstack/middleware";
+ *
+ * export const getUser = createServerFn().middleware(authMiddleware).handler(async ({ context }) => {
+ *   return context.user;
+ * });
  */
 export const authMiddleware = createMiddleware().server(async ({ next }) => {
   const session = await auth.api.getSession({

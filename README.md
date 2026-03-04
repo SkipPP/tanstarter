@@ -36,6 +36,7 @@ A minimal monorepo starter for 🏝️ TanStack Start.
 ## Table of Contents
 
 - [Getting Started](#getting-started)
+- [Required environment variables](#required-environment-variables)
 - [Deploying to production](#deploying-to-production)
 - [Issue watchlist](#issue-watchlist)
 - [Goodies](#goodies)
@@ -55,7 +56,7 @@ A minimal monorepo starter for 🏝️ TanStack Start.
    pnpm install
    ```
 
-2. Create `.env` files in [`/apps/web`](./apps/web/.env.example), [`/packages/mail`](./packages/mail/.env.example) and [`/packages/db`](./packages/db/.env.example) based on their respective `.env.example` files.
+2. Create `.env` files in [`/apps/web`](./apps/web/.env.example), [`/packages/mail`](./packages/mail/.env.example) and [`/packages/db`](./packages/db/.env.example) based on their respective `.env.example` files. See [Required environment variables](#required-environment-variables) below.
 
 3. Generate the initial migration with drizzle-kit, then apply to your database:
 
@@ -71,6 +72,23 @@ A minimal monorepo starter for 🏝️ TanStack Start.
    ```
 
    The development server should now be running at [http://localhost:3000](http://localhost:3000).
+
+## Required environment variables
+
+Set these in `apps/web/.env` (and in your deployment environment). Copy from [`apps/web/.env.example`](./apps/web/.env.example).
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `VITE_BASE_URL` | Yes | Public URL of the app (e.g. `http://localhost:3000`). |
+| `SERVER_DATABASE_URL` | Yes | PostgreSQL connection string. |
+| `SERVER_AUTH_SECRET` | Yes | Secret for signing sessions. Generate one with **`pnpm auth:secret`**. |
+| `BETTER_AUTH_URL` | Yes* | Same as app URL; used by Better Auth. Defaults to `VITE_BASE_URL` if unset. |
+| `SERVER_RESEND_API_KEY` | Yes | Resend API key for sending verification and password-reset emails. |
+| `SERVER_MAIL_FROM` | Yes | "From" address for transactional emails (e.g. `noreply@yourdomain.com`). |
+| `SERVER_GITHUB_CLIENT_ID` / `SERVER_GITHUB_CLIENT_SECRET` | No | For GitHub OAuth. |
+| `SERVER_GOOGLE_CLIENT_ID` / `SERVER_GOOGLE_CLIENT_SECRET` | No | For Google OAuth. |
+
+In multiple environments (staging, production), set `BETTER_AUTH_URL` and `VITE_BASE_URL` to the correct app URL for that environment (no trailing slash, correct scheme).
 
 ## Deploying to production
 
