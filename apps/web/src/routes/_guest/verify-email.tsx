@@ -75,7 +75,7 @@ function VerifyEmailForm({ className, ...props }: React.ComponentPropsWithoutRef
         <div className="flex flex-col items-center gap-1 text-center">
           <h1 className="text-2xl font-bold">Verify your email</h1>
 
-          <p className="text-sm text-balance text-muted-foreground">
+          <p className="hidden text-sm text-balance text-muted-foreground lg:block">
             Click the button below to verify your email address
           </p>
         </div>

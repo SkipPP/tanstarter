@@ -88,7 +88,7 @@ function ResetPasswordForm({ className, ...props }: React.ComponentPropsWithoutR
         <div className="flex flex-col items-center gap-1 text-center">
           <h1 className="text-2xl font-bold">Reset your password</h1>
 
-          <p className="text-sm text-balance text-muted-foreground">
+          <p className="hidden text-sm text-balance text-muted-foreground lg:block">
             Enter your new password below to reset your password.
           </p>
         </div>

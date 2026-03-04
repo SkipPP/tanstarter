@@ -65,7 +65,7 @@ function ForgotPasswordForm({ className, ...props }: React.ComponentPropsWithout
         <div className="flex flex-col items-center gap-1 text-center">
           <h1 className="text-2xl font-bold">Forgot your password ?</h1>
 
-          <p className="text-sm text-balance text-muted-foreground">
+          <p className="hidden text-sm text-balance text-muted-foreground lg:block">
             Enter your email below to request a password reset.
           </p>
         </div>
@@ -84,7 +84,7 @@ function ForgotPasswordForm({ className, ...props }: React.ComponentPropsWithout
         </form.AppForm>
 
         <Field className="w-fit self-center">
-          <Button asChild variant="link" size="sm" className="text-muted-foreground">
+          <Button asChild variant="link" size="sm" className="text-muted-foreground underline">
             <Link to="/login">
               <IconArrowLeft /> Back to login
             </Link>

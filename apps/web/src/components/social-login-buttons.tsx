@@ -109,7 +109,7 @@ export function SocialLoginButtons({
 
   return (
     <div
-      className={providers.length > 1 ? "grid grid-cols-2 gap-2" : "flex flex-col"}
+      className={providers.length > 1 ? "grid gap-2 lg:grid-cols-2" : "flex flex-col"}
       role="group"
       aria-label={`${actionLabel} with social providers`}
     >

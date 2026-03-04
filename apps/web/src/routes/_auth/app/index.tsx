@@ -25,11 +25,9 @@ function AppIndex() {
     <div className="space-y-2 px-4 py-2">
       <h1 className="text-2xl font-bold">Welcome back, {user.name}!</h1>
 
-      {greeting && (
-        <p className="text-sm text-muted-foreground">
-          From protected server function : {greeting.message}
-        </p>
-      )}
+      <p className="text-sm text-muted-foreground">
+        From protected server function : {greeting.message}
+      </p>
     </div>
   );
 }

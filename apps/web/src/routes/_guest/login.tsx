@@ -100,7 +100,7 @@ function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"form
         <div className="flex flex-col items-center gap-1 text-center">
           <h1 className="text-2xl font-bold">Login to your account</h1>
 
-          <p className="text-sm text-balance text-muted-foreground">
+          <p className="hidden text-sm text-balance text-muted-foreground lg:block">
             Enter your email below to login to your account
           </p>
         </div>
@@ -142,7 +142,7 @@ function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"form
         </Field>
 
         <Field className="w-fit self-center">
-          <Button asChild variant="link" size="sm" className="text-muted-foreground">
+          <Button asChild variant="link" size="sm" className="text-muted-foreground underline">
             <Link to="/signup">
               <IconArrowRight /> Don't have an account ? Sign up
             </Link>
