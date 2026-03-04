@@ -1,11 +1,11 @@
 import authClient from "@repo/auth/auth-client";
 import { Button } from "@repo/ui/components/button";
+import { Spinner } from "@repo/ui/components/spinner";
 import {
   IconBrandAppleFilled,
   IconBrandDiscordFilled,
   IconBrandGithubFilled,
   IconBrandGoogleFilled,
-  IconLoader,
 } from "@tabler/icons-react";
 import React, { type ComponentType } from "react";
 import { toast } from "sonner";
@@ -134,7 +134,7 @@ export function SocialLoginButtons({
             aria-busy={isProviderSubmitting}
           >
             {isProviderSubmitting ? (
-              <IconLoader className="size-4 animate-spin" aria-hidden />
+              <Spinner aria-hidden />
             ) : (
               <Icon className="size-4" aria-hidden />
             )}

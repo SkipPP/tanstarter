@@ -129,7 +129,11 @@ function SignupForm({ className, ...props }: React.ComponentPropsWithoutRef<"for
             <form.SubmitButton label="Create Account" loadingLabel="Creating account..." />
           </form.AppForm>
 
-          <SocialLoginButtons callbackURL={redirectUrl} actionLabel="Sign up" />
+          <SocialLoginButtons
+            callbackURL={redirectUrl}
+            actionLabel="Sign up"
+            providers={["google", "github"]}
+          />
         </Field>
 
         <Field className="w-fit self-center">

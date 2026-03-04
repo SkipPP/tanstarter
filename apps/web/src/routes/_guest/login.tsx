@@ -137,7 +137,7 @@ function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"form
           <SocialLoginButtons
             callbackURL={redirectUrl}
             actionLabel="Login"
-            providers={["google", "github", "apple", "discord"]}
+            providers={["google", "github"]}
           />
         </Field>
 
