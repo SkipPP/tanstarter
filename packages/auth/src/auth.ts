@@ -51,9 +51,7 @@ export const auth = betterAuth({
     enabled: true,
     requireEmailVerification: true,
     resetPasswordTokenExpiresIn: 3600, // 1 hour
-    sendResetPassword: async ({ user, token }) => {
-      const url = `${baseURL}/reset-password?token=${token}&username=${user.name}&callbackURL=/app`;
-
+    sendResetPassword: async ({ user, url }) => {
       await resend.emails.send({
         from: mailFrom,
         to: user.email,
@@ -66,9 +64,7 @@ export const auth = betterAuth({
     sendOnSignUp: true,
     autoSignInAfterVerification: true,
     expiresIn: 3600, // 1 hour
-    sendVerificationEmail: async ({ user, token }) => {
-      const url = `${baseURL}/verify-email?token=${token}&username=${user.name}&callbackURL=/app?emailVerified=true`;
-
+    sendVerificationEmail: async ({ user, url }) => {
       await resend.emails.send({
         from: mailFrom,
         to: user.email,

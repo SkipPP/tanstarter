@@ -13,14 +13,19 @@ export const Route = createFileRoute("/")({
 
 function HomePage() {
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center gap-10 bg-card p-2">
-      <div className="flex flex-col items-center gap-4">
+    <div className="flex min-h-svh flex-col items-center justify-center gap-10 p-2">
+      <div className="flex flex-col items-center gap-2">
         <h1 className="text-3xl font-bold sm:text-4xl">TanStarter</h1>
-        <div className="flex items-center gap-2 text-sm text-foreground/80 max-sm:flex-col">
+
+        <div className="mb-4 flex flex-col items-center gap-2 text-sm text-foreground/80">
           This is an unprotected page:
-          <pre className="rounded-md border bg-card p-1 text-card-foreground">routes/index.tsx</pre>
+          <pre className="rounded-md border bg-card p-1 text-xs text-card-foreground">
+            routes/index.tsx
+          </pre>
         </div>
       </div>
+
+      <ThemeToggle className="absolute top-10 right-10 z-10" />
 
       <Suspense fallback={<IconLoader className="animate-spin" />}>
         <UserAction />
@@ -34,30 +39,27 @@ function UserAction() {
 
   return user ? (
     <div className="flex flex-col items-center gap-2">
-      <p>Welcome back, {user.name}!</p>
+      <p>Welcome back, {user.name} !</p>
 
-      <Button asChild className="mb-2 w-fit" size="lg">
-        <Link to="/app">Go to App</Link>
-      </Button>
+      <pre className="max-w-screen overflow-x-auto px-2 text-start">
+        {JSON.stringify(user, null, 2)}
+      </pre>
 
-      <div className="text-center text-xs sm:text-sm">
-        Session user:
-        <pre className="max-w-screen overflow-x-auto px-2 text-start">
-          {JSON.stringify(user, null, 2)}
-        </pre>
+      <div className="grid grid-cols-2 gap-2">
+        <Button asChild>
+          <Link to="/app">Go to App</Link>
+        </Button>
+
+        <SignOutButton />
       </div>
-
-      <SignOutButton />
     </div>
   ) : (
     <div className="flex flex-col items-center gap-2">
       <p>You are not signed in.</p>
 
-      <Button asChild className="w-fit" size="lg">
+      <Button asChild className="w-fit">
         <Link to="/login">Log in</Link>
       </Button>
-
-      <ThemeToggle />
     </div>
   );
 }

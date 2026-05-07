@@ -2,17 +2,15 @@ import authClient from "@repo/auth/auth-client";
 import { FieldGroup } from "@repo/ui/components/field";
 import { cn } from "@repo/ui/lib/utils";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useId } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
-
-import { useAppForm } from "@/components/form";
 
 export const Route = createFileRoute("/_guest/verify-email")({
   component: VerifyEmailForm,
   validateSearch: z.object({
     token: z.string().nonempty("Token is required"),
-    callbackURL: z.string().optional(),
+    callbackURL: z.string().nonempty("Callback URL is required"),
   }),
   beforeLoad: ({ search }) => {
     if (!search.token) {
@@ -26,64 +24,62 @@ export const Route = createFileRoute("/_guest/verify-email")({
   },
 });
 
-function VerifyEmailForm({ className, ...props }: React.ComponentPropsWithoutRef<"form">) {
-  const id = useId();
+function VerifyEmailForm({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
   const navigate = useNavigate();
 
   const { token, callbackURL } = Route.useSearch();
 
-  const form = useAppForm({
-    defaultValues: {
-      token,
-    },
-    onSubmit: async () => {
-      await authClient.verifyEmail(
-        {
-          query: {
-            token,
-            callbackURL,
-          },
+  const hasStartedRef = useRef(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (hasStartedRef.current) return;
+    hasStartedRef.current = true;
+
+    setErrorMessage(null);
+
+    void authClient.verifyEmail(
+      {
+        query: {
+          token,
+          callbackURL,
         },
-        {
-          onSuccess: async () => {
-            toast.success("Email verified.", {
-              description: "Redirecting you to the dashboard...",
-            });
-            await navigate({ to: callbackURL });
-          },
-          onError: ({ error }) => {
-            toast.error(error.message || "An error occurred while verifying your email.");
-          },
+      },
+      {
+        onSuccess: async () => {
+          toast.success("Email verified.", {
+            description: "Redirecting you to the dashboard...",
+          });
+
+          await navigate({ to: callbackURL });
         },
-      );
-    },
-  });
+        onError: ({ error }) => {
+          const message = error.message || "An error occurred while verifying your email.";
+
+          setErrorMessage(message);
+          toast.error(message);
+        },
+      },
+    );
+  }, [navigate, callbackURL, token]);
 
   return (
-    <form
-      id={id}
-      className={cn("flex flex-col gap-6", className)}
-      onSubmit={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        form.handleSubmit();
-      }}
-      {...props}
-    >
+    <div className={cn("flex flex-col gap-6", className)} {...props}>
       <FieldGroup>
         <div className="flex flex-col items-center gap-1 text-center">
-          <h1 className="text-2xl font-bold">Verify your email</h1>
-
-          <p className="hidden text-sm text-balance text-muted-foreground lg:block">
-            Click the button below to verify your email address
-          </p>
+          <h1 className="text-2xl font-bold">
+            {errorMessage ? "We couldn't verify your email." : "Verifying your email address..."}
+          </h1>
         </div>
 
-        <form.AppForm>
-          <form.SubmitButton label="Verify Email" loadingLabel="Verifying email..." />
-        </form.AppForm>
+        {errorMessage ? (
+          <div className="text-center text-sm text-destructive">{errorMessage}</div>
+        ) : (
+          <div className="text-center text-sm text-muted-foreground">
+            This should only take a moment.
+          </div>
+        )}
       </FieldGroup>
-    </form>
+    </div>
   );
 }

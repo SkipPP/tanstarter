@@ -47,7 +47,7 @@ function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"form
             if (error.status === 403) {
               toast.error("Please verify your email address.", {
                 action: {
-                  label: "Resend Email",
+                  label: "Send Email",
                   onClick: async () => {
                     await authClient.sendVerificationEmail(
                       {

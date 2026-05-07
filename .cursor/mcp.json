@@ -6,6 +6,11 @@
     "shadcn": {
       "command": "pnpm",
       "args": ["dlx", "shadcn@latest", "mcp"]
+      "args": [
+        "dlx",
+        "shadcn@latest",
+        "mcp"
+      ]
     }
   }
 }

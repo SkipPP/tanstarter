@@ -1,4 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { Button } from "@repo/ui/components/button";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { $getGreeting } from "@/lib/example-protected-server";
 
