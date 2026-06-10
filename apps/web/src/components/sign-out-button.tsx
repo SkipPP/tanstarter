@@ -1,5 +1,5 @@
-import { authClient } from "@repo/auth/auth-client";
 import { authQueryOptions } from "@repo/auth/tanstack/queries";
+import { $signOut } from "@repo/auth/tanstack/functions";
 import { Button } from "@repo/ui/components/button";
 import { IconLogout } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -15,15 +15,9 @@ export function SignOutButton({ className }: { className?: string }) {
       className={className}
       variant="destructive"
       onClick={async () => {
-        await authClient.signOut({
-          fetchOptions: {
-            onResponse: async () => {
-              // manually set to null to avoid unnecessary refetching
-              queryClient.setQueryData(authQueryOptions().queryKey, null);
-              await router.invalidate();
-            },
-          },
-        });
+        await $signOut();
+        queryClient.setQueryData(authQueryOptions().queryKey, null);
+        await router.invalidate();
       }}
     >
       <IconLogout />

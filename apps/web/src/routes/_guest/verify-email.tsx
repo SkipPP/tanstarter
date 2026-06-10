@@ -6,11 +6,16 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { safeInternalRedirectPath } from "@/lib/safe-redirect";
+
 export const Route = createFileRoute("/_guest/verify-email")({
   component: VerifyEmailForm,
   validateSearch: z.object({
     token: z.string().nonempty("Token is required"),
-    callbackURL: z.string().nonempty("Callback URL is required"),
+    callbackURL: z
+      .string()
+      .optional()
+      .transform((value) => safeInternalRedirectPath(value ?? "/app")),
   }),
   beforeLoad: ({ search }) => {
     if (!search.token) {
@@ -19,7 +24,7 @@ export const Route = createFileRoute("/_guest/verify-email")({
 
     return {
       token: search.token,
-      callbackURL: search.callbackURL ?? "/app",
+      callbackURL: search.callbackURL,
     };
   },
 });

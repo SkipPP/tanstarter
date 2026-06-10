@@ -52,7 +52,9 @@ function SignupForm({ className, ...props }: React.ComponentPropsWithoutRef<"for
     onSubmit: async ({ value }) => {
       await authClient.signUp.email(
         {
-          ...value,
+          name: value.name,
+          email: value.email,
+          password: value.password,
           callbackURL: redirectUrl,
         },
         {

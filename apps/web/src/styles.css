@@ -2,7 +2,7 @@
 
 @source "./";
 
-@import "@fontsource-variable/inter";
+@import "@fontsource-variable/inter/wght.css";
 
 @theme inline {
   --font-sans: "Inter Variable", sans-serif;

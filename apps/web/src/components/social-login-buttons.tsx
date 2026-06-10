@@ -76,7 +76,6 @@ export function SocialLoginButtons({
 
         // Better Auth always resolves; errors are on result.error, so we must throw to trigger toast.promise error path
         if (result?.error) {
-          console.log(result);
           const err = result.error as {
             message?: string;
             code?: string;
@@ -85,7 +84,7 @@ export function SocialLoginButtons({
           };
 
           throw new Error(
-            err?.message ?? err?.statusText ?? "An error occurred while logging in with ${label}",
+            err?.message ?? err?.statusText ?? `An error occurred while logging in with ${label}`,
           );
         }
 

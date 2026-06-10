@@ -12,4 +12,11 @@ export const getThemeServerFn = createServerFn().handler(
 );
 export const setThemeServerFn = createServerFn()
   .inputValidator(setThemeValidator)
-  .handler(({ data }) => setCookie(storageKey, data));
+  .handler(({ data }) =>
+    setCookie(storageKey, data, {
+      path: "/",
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 24 * 365,
+    }),
+  );

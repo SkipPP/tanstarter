@@ -5,7 +5,7 @@ import viteReact from "@vitejs/plugin-react";
 import { nitro } from "nitro/vite";
 import { defineConfig } from "vite";
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   optimizeDeps: {
     include: ["@tanstack/react-form-start"],
   },
@@ -16,7 +16,7 @@ export default defineConfig({
     port: 3000,
   },
   plugins: [
-    devtools(),
+    command === "serve" && devtools(),
     tanstackStart(),
     // https://tanstack.com/start/latest/docs/framework/react/guide/hosting
     nitro(),
@@ -34,5 +34,5 @@ export default defineConfig({
       },
     }),
     tailwindcss(),
-  ],
-});
+  ].filter(Boolean),
+}));

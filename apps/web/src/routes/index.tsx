@@ -13,7 +13,7 @@ export const Route = createFileRoute("/")({
 
 function HomePage() {
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center gap-10 p-2">
+    <section className="flex min-h-svh flex-col items-center justify-center gap-10 p-2">
       <div className="flex flex-col items-center gap-2">
         <h1 className="text-3xl font-bold sm:text-4xl">TanStarter</h1>
 
@@ -25,12 +25,12 @@ function HomePage() {
         </div>
       </div>
 
-      <ThemeToggle className="absolute top-10 right-10 z-10" />
-
       <Suspense fallback={<IconLoader className="animate-spin" />}>
         <UserAction />
       </Suspense>
-    </div>
+
+      <ThemeToggle className="absolute top-10 right-10 z-10" />
+    </section>
   );
 }
 
@@ -39,11 +39,7 @@ function UserAction() {
 
   return user ? (
     <div className="flex flex-col items-center gap-2">
-      <p>Welcome back, {user.name} !</p>
-
-      <pre className="max-w-screen overflow-x-auto px-2 text-start">
-        {JSON.stringify(user, null, 2)}
-      </pre>
+      <p>Welcome back, {user.name}!</p>
 
       <div className="grid grid-cols-2 gap-2">
         <Button asChild>

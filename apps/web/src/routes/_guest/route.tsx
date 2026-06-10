@@ -66,7 +66,7 @@ function RouteComponent() {
         <img
           src="/background-login.jpg"
           alt="Background login"
-          loading="lazy"
+          loading="eager"
           decoding="async"
           fetchPriority="high"
           className="absolute inset-0 h-full w-full object-cover dark:grayscale"

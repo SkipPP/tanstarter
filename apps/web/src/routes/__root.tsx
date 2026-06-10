@@ -69,19 +69,21 @@ function RootDocument({ children }: { readonly children: React.ReactNode }) {
 
         <Toaster richColors theme={theme} />
 
-        <TanStackDevtools
-          plugins={[
-            {
-              name: "TanStack Query",
-              render: <ReactQueryDevtoolsPanel />,
-            },
-            {
-              name: "TanStack Router",
-              render: <TanStackRouterDevtoolsPanel />,
-            },
-            // formDevtoolsPlugin(),
-          ]}
-        />
+        {import.meta.env.DEV && (
+          <TanStackDevtools
+            plugins={[
+              {
+                name: "TanStack Query",
+                render: <ReactQueryDevtoolsPanel />,
+              },
+              {
+                name: "TanStack Router",
+                render: <TanStackRouterDevtoolsPanel />,
+              },
+              // formDevtoolsPlugin(),
+            ]}
+          />
+        )}
 
         <Scripts />
       </body>
