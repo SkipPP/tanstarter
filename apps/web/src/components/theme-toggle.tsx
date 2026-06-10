@@ -6,9 +6,10 @@ import {
   DropdownMenuTrigger,
 } from "@repo/ui/components/dropdown-menu";
 import { IconDeviceDesktop, IconMoon, IconSun } from "@tabler/icons-react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouteContext, useRouter } from "@tanstack/react-router";
 
-import { setThemeServerFn, type Theme } from "@/lib/theme";
+import { setThemeServerFn, themeQueryOptions, type Theme } from "@/lib/theme";
 
 interface ThemeToggleProps {
   className?: React.ComponentProps<"button">["className"];
@@ -36,10 +37,13 @@ interface ThemeToggleProps {
 
 export function ThemeToggle({ className, variant = "secondary", size = "icon" }: ThemeToggleProps) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { theme } = useRouteContext({ from: "__root__" });
 
-  function toggleTheme(theme: Theme) {
-    setThemeServerFn({ data: theme }).then(() => router.invalidate());
+  async function toggleTheme(theme: Theme) {
+    await setThemeServerFn({ data: theme });
+    queryClient.setQueryData(themeQueryOptions().queryKey, theme);
+    await router.invalidate();
   }
 
   return (

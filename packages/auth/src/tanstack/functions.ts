@@ -2,7 +2,6 @@ import { createServerFn, createServerOnlyFn } from "@tanstack/react-start";
 import { getRequest, setResponseHeader } from "@tanstack/react-start/server";
 
 import { auth } from "../auth";
-import { freshAuthMiddleware } from "./middleware";
 
 /**
  * This server function is meant to be called via authQueryOptions() in queries.ts,
@@ -42,19 +41,3 @@ export const _getUser = createServerOnlyFn(async (query?: GetUserServerQuery) =>
 
   return session.response?.user || null;
 });
-
-export const $signOut = createServerFn({ method: "POST" })
-  .middleware([freshAuthMiddleware])
-  .handler(async () => {
-    const result = await auth.api.signOut({
-      headers: getRequest().headers,
-      returnHeaders: true,
-    });
-
-    const cookies = result.headers?.getSetCookie();
-    if (cookies?.length) {
-      setResponseHeader("Set-Cookie", cookies);
-    }
-
-    return { success: true };
-  });

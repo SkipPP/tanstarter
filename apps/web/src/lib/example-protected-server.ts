@@ -17,7 +17,7 @@ export const $getGreeting = createServerFn()
   .middleware([authMiddleware])
   .handler(async ({ context }) => {
     return {
-      message: `Hello, ${context.user.name}!`,
+      message: `A message from protected server function`,
       email: context.user.email,
     };
   });

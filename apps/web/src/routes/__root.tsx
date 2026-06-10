@@ -10,7 +10,7 @@ import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
 import { createRootRouteWithContext, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
-import { getThemeServerFn } from "@/lib/theme";
+import { themeQueryOptions } from "@/lib/theme";
 
 import appCss from "@/styles.css?url";
 
@@ -24,7 +24,9 @@ export const Route = createRootRouteWithContext<{
   //   context.queryClient.prefetchQuery(authQueryOptions());
   // },
   shellComponent: RootComponent,
-  beforeLoad: async () => ({ theme: await getThemeServerFn() }),
+  beforeLoad: async ({ context }) => ({
+    theme: await context.queryClient.ensureQueryData(themeQueryOptions()),
+  }),
   head: () => ({
     meta: [
       {
