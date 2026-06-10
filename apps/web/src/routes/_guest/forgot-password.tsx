@@ -1,4 +1,4 @@
-import authClient from "@repo/auth/auth-client";
+import { authClient } from "@repo/auth/auth-client";
 import { Button } from "@repo/ui/components/button";
 import { Field, FieldGroup } from "@repo/ui/components/field";
 import { cn } from "@repo/ui/lib/utils";

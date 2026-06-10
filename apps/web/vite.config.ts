@@ -4,19 +4,13 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import { nitro } from "nitro/vite";
 import { defineConfig } from "vite";
-import { fileURLToPath } from "node:url";
 
 export default defineConfig({
+  optimizeDeps: {
+    include: ["@tanstack/react-form-start"],
+  },
   resolve: {
     tsconfigPaths: true,
-    alias: {
-      "use-sync-external-store/shim/with-selector.js": fileURLToPath(
-        new URL("./src/lib/shims/use-sync-external-store-with-selector.ts", import.meta.url),
-      ),
-      "use-sync-external-store/shim/with-selector": fileURLToPath(
-        new URL("./src/lib/shims/use-sync-external-store-with-selector.ts", import.meta.url),
-      ),
-    },
   },
   server: {
     port: 3000,

@@ -1,4 +1,4 @@
-import authClient from "@repo/auth/auth-client";
+import { authClient } from "@repo/auth/auth-client";
 import { FieldGroup } from "@repo/ui/components/field";
 import { cn } from "@repo/ui/lib/utils";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";

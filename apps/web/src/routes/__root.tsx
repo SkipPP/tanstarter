@@ -4,7 +4,6 @@ import type { AuthQueryResult } from "@repo/auth/tanstack/queries";
 import { Toaster } from "@repo/ui/components/sonner";
 import { TooltipProvider } from "@repo/ui/components/tooltip";
 import { TanStackDevtools } from "@tanstack/react-devtools";
-import "@fontsource-variable/inter";
 import type { QueryClient } from "@tanstack/react-query";
 // import { formDevtoolsPlugin } from "@tanstack/react-form-devtools";
 import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
@@ -24,7 +23,7 @@ export const Route = createRootRouteWithContext<{
   // beforeLoad: ({ context }) => {
   //   context.queryClient.prefetchQuery(authQueryOptions());
   // },
-  component: RootComponent,
+  shellComponent: RootComponent,
   beforeLoad: async () => ({ theme: await getThemeServerFn() }),
   head: () => ({
     meta: [
