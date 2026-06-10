@@ -1,8 +1,10 @@
 {
   "name": "tanstarter",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "turbo run build",
+    "build:web": "turbo run build --filter=@repo/web",
     "dev": "turbo run dev --parallel",
     "dev:web": "turbo run dev --filter=@repo/web",
     "lint": "oxlint --type-aware --type-check",
@@ -10,15 +12,9 @@
     "format": "oxfmt",
     "format:check": "oxfmt --check",
     "check": "turbo run quality",
-    "deps": "pnpm dlx taze@latest -Ilwr",
-    "deps:major": "pnpm dlx taze@latest major -Ilwr",
+    "deps": "pnpm dlx taze@latest -Ilwr --maturity-period 3",
+    "tanstack": "pnpm dlx @tanstack/cli@latest",
     "db": "pnpm --filter=@repo/db run db",
-    "db:generate": "pnpm --filter=@repo/db run generate",
-    "db:migrate": "pnpm --filter=@repo/db run migrate",
-    "db:seed": "pnpm --filter=@repo/db run seed",
-    "db:up": "docker compose up -d db",
-    "db:down": "docker compose down",
-    "db:reset": "pnpm db:down -v && pnpm db:up && pnpm db:migrate && pnpm db:seed",
     "ui": "pnpm --filter=@repo/ui run ui",
     "ui:web": "pnpm --filter=@repo/web run ui",
     "auth:secret": "pnpm dlx @better-auth/cli@latest secret",
@@ -42,5 +38,5 @@
   "engines": {
     "node": ">=24"
   },
-  "packageManager": "pnpm@10.30.2"
+  "packageManager": "pnpm@11.5.2"
 }

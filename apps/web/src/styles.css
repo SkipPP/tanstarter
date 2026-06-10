@@ -2,6 +2,8 @@
 
 @source "./";
 
+@import "@fontsource-variable/inter";
+
 @theme inline {
   --font-sans: "Inter Variable", sans-serif;
 }

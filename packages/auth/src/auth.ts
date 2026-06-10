@@ -1,20 +1,15 @@
 import "@tanstack/react-start/server-only";
-import { drizzleAdapter } from "@better-auth/drizzle-adapter/relations-v2";
+// import { drizzleAdapter } from "@better-auth/drizzle-adapter/relations-v2";
+import { drizzleAdapter } from "@better-auth/drizzle-adapter";
 import { db } from "@repo/db";
 import * as schema from "@repo/db/schema";
 import { resend } from "@repo/mail/resend";
 import { betterAuth } from "better-auth/minimal";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 
-import { getValidatedAuthEnv } from "./env";
-
-const { baseURL, secret, mailFrom } = getValidatedAuthEnv();
-const trustedOrigins = baseURL ? baseURL.split(",") : [];
-
 export const auth = betterAuth({
-  baseURL,
-  trustedOrigins,
-  secret,
+  baseURL: process.env.VITE_BASE_URL as string,
+  secret: process.env.SERVER_AUTH_SECRET as string,
   telemetry: {
     enabled: false,
   },
