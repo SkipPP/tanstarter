@@ -10,7 +10,31 @@ import { useRouteContext, useRouter } from "@tanstack/react-router";
 
 import { setThemeServerFn, type Theme } from "@/lib/theme";
 
-export function ThemeToggle({ className }: { className?: string }) {
+interface ThemeToggleProps {
+  className?: React.ComponentProps<"button">["className"];
+  variant?:
+    | "secondary"
+    | "ghost"
+    | "link"
+    | "default"
+    | "outline"
+    | "destructive"
+    | null
+    | undefined;
+  size?:
+    | "icon"
+    | "icon-sm"
+    | "icon-lg"
+    | "icon-xs"
+    | "default"
+    | "sm"
+    | "lg"
+    | "xs"
+    | null
+    | undefined;
+}
+
+export function ThemeToggle({ className, variant = "secondary", size = "icon" }: ThemeToggleProps) {
   const router = useRouter();
   const { theme } = useRouteContext({ from: "__root__" });
 
@@ -21,7 +45,7 @@ export function ThemeToggle({ className }: { className?: string }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className={className} asChild>
-        <Button variant="secondary" size="icon">
+        <Button variant={variant} size={size}>
           <IconMoon
             className={`absolute h-[1.2rem] w-[1.2rem] transition-all ${
               theme === "system"

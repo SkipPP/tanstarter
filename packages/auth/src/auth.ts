@@ -48,7 +48,7 @@ export const auth = betterAuth({
     resetPasswordTokenExpiresIn: 3600, // 1 hour
     sendResetPassword: async ({ user, url }) => {
       await resend.emails.send({
-        from: mailFrom,
+        from: process.env.SERVER_MAIL_FROM as string,
         to: user.email,
         subject: "TANSTARTER - Reset your password",
         html: `<p>Reset your password by clicking <a href="${url}">here</a></p>`,
@@ -61,7 +61,7 @@ export const auth = betterAuth({
     expiresIn: 3600, // 1 hour
     sendVerificationEmail: async ({ user, url }) => {
       await resend.emails.send({
-        from: mailFrom,
+        from: process.env.SERVER_MAIL_FROM as string,
         to: user.email,
         subject: "TANSTARTER - Verify your email",
         html: `<p>Verify your email by clicking <a href="${url}">here</a></p>`,
