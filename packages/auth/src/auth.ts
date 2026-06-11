@@ -1,5 +1,4 @@
 import "@tanstack/react-start/server-only";
-// import { drizzleAdapter } from "@better-auth/drizzle-adapter/relations-v2";
 import { drizzleAdapter } from "@better-auth/drizzle-adapter";
 import { db } from "@repo/db";
 import * as schema from "@repo/db/schema";
@@ -39,7 +38,6 @@ export const auth = betterAuth({
       clientSecret: process.env.SERVER_GITHUB_CLIENT_SECRET as string,
     },
     google: {
-      enabled: true,
       clientId: process.env.SERVER_GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.SERVER_GOOGLE_CLIENT_SECRET as string,
     },

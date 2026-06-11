@@ -1,35 +1,27 @@
 # TanStarter
 
-> [!WARNING]
-> This is still a work in progress. Mainly blocked by:
->
-> - [ ] Drizzle Relations v2 support in Better Auth (https://github.com/better-auth/better-auth/pull/6913)
->
-> Also see the [issue watchlist](#issue-watchlist) below.
-
 A minimal monorepo starter for 🏝️ TanStack Start.
 
 - [Turborepo](https://turborepo.com/) + [pnpm](https://pnpm.io/)
 - [React 19](https://react.dev) + [React Compiler](https://react.dev/learn/react-compiler)
 - TanStack [Start](https://tanstack.com/start/latest) + [Router](https://tanstack.com/router/latest) + [Query](https://tanstack.com/query/latest) + [Form](https://tanstack.com/form/latest)
 - [Vite 8](https://vite.dev/) + [Nitro v3](https://v3.nitro.build/)
-- [Tailwind CSS v4](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/) + [Base UI](https://base-ui.com/) (base-maia)
+- [Tailwind CSS v4](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/) + [Radix UI](https://www.radix-ui.com/)
 - [Drizzle ORM](https://orm.drizzle.team/) + PostgreSQL
 - [Better Auth](https://www.better-auth.com/)
 - [Oxlint](https://oxc.rs/docs/guide/usage/linter.html) + [Oxfmt](https://oxc.rs/docs/guide/usage/formatter.html)
 
 ```sh
 ├── apps
-│    ├── web                    # TanStack Start web app
+│    └── web                    # TanStack Start web app
 ├── packages
 │    ├── auth                   # Better Auth
 │    ├── db                     # Drizzle ORM + Drizzle Kit + PostgreSQL
 │    ├── mail                   # Resend
-│    ├── ui                     # shadcn/ui primitives & utils
+│    └── ui                     # shadcn/ui primitives & utils
 ├── tooling
 │    └── tsconfig               # Shared TypeScript configuration
 ├── turbo.json
-├── LICENSE
 └── README.md
 ```
 
@@ -56,7 +48,7 @@ A minimal monorepo starter for 🏝️ TanStack Start.
    pnpm install
    ```
 
-2. Create `.env` files in [`/apps/web`](./apps/web/.env.example), [`/packages/mail`](./packages/mail/.env.example) and [`/packages/db`](./packages/db/.env.example) based on their respective `.env.example` files. See [Required environment variables](#required-environment-variables) below.
+2. Create `.env` files in [`/apps/web`](./apps/web/.env.example), based on the `.env.example` file. See [Required environment variables](#required-environment-variables) below.
 
 3. Generate the initial migration with drizzle-kit, then apply to your database:
 
@@ -127,9 +119,7 @@ This template is configured for **[pnpm](https://pnpm.io/)** by default. Check t
 
 The template is kept minimal by default, but is compatible with many third‑party integrations. Here are a few we use in our projects:
 
-- [PostHog](https://posthog.com/) - analytics & observability
 - [Resend](https://resend.com/) - email
-- [Polar](https://polar.sh/) - billing
 - ... and many more!
 
 ## Ecosystem
