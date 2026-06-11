@@ -7,9 +7,13 @@ import { resend } from "@repo/mail/resend";
 import { betterAuth } from "better-auth/minimal";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 
+import { requireEnv } from "./env";
+
+const env = requireEnv(["VITE_BASE_URL", "SERVER_AUTH_SECRET", "SERVER_MAIL_FROM"]);
+
 export const auth = betterAuth({
-  baseURL: process.env.VITE_BASE_URL as string,
-  secret: process.env.SERVER_AUTH_SECRET as string,
+  baseURL: env.VITE_BASE_URL,
+  secret: env.SERVER_AUTH_SECRET,
   telemetry: {
     enabled: false,
   },
@@ -29,7 +33,7 @@ export const auth = betterAuth({
     },
   },
 
-  socialProviders: {
+  /* socialProviders: {
     github: {
       clientId: process.env.SERVER_GITHUB_CLIENT_ID as string,
       clientSecret: process.env.SERVER_GITHUB_CLIENT_SECRET as string,
@@ -39,7 +43,7 @@ export const auth = betterAuth({
       clientId: process.env.SERVER_GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.SERVER_GOOGLE_CLIENT_SECRET as string,
     },
-  },
+  }, */
 
   // https://www.better-auth.com/docs/authentication/email-password
   emailAndPassword: {
@@ -48,7 +52,7 @@ export const auth = betterAuth({
     resetPasswordTokenExpiresIn: 3600, // 1 hour
     sendResetPassword: async ({ user, url }) => {
       await resend.emails.send({
-        from: process.env.SERVER_MAIL_FROM as string,
+        from: env.SERVER_MAIL_FROM,
         to: user.email,
         subject: "TANSTARTER - Reset your password",
         html: `<p>Reset your password by clicking <a href="${url}">here</a></p>`,
@@ -61,7 +65,7 @@ export const auth = betterAuth({
     expiresIn: 3600, // 1 hour
     sendVerificationEmail: async ({ user, url }) => {
       await resend.emails.send({
-        from: process.env.SERVER_MAIL_FROM as string,
+        from: env.SERVER_MAIL_FROM,
         to: user.email,
         subject: "TANSTARTER - Verify your email",
         html: `<p>Verify your email by clicking <a href="${url}">here</a></p>`,

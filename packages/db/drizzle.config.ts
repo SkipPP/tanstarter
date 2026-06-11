@@ -4,6 +4,10 @@ import type { Config } from "drizzle-kit";
 
 loadEnvFile("../../apps/web/.env");
 
+if (!process.env.SERVER_DATABASE_URL) {
+  throw new Error("Missing environment variable: SERVER_DATABASE_URL");
+}
+
 export default {
   out: "./migrations",
   schema: "./src/schema/index.ts",
