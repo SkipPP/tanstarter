@@ -18,6 +18,9 @@ coverage
 # Turbo
 .turbo
 
+# PNPM
+.pnpm*
+
 # Build Outputs
 out/
 build

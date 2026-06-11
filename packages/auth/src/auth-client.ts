@@ -1,7 +1,6 @@
 import { createAuthClient } from "better-auth/react";
 
-const baseURL = (import.meta as any).env.VITE_BASE_URL;
-if (!baseURL) {
+if (!(import.meta as any).env.VITE_BASE_URL) {
   throw new Error("Missing environment variable: VITE_BASE_URL");
 }
 
@@ -14,5 +13,5 @@ if (!baseURL) {
  * For server/SSR operations, prefer `auth.api` instead, and wrap in a serverFn if needed.
  */
 export const authClient = createAuthClient({
-  baseURL,
+  baseURL: (import.meta as any).env.VITE_BASE_URL || process.env.VITE_BASE_URL,
 });
