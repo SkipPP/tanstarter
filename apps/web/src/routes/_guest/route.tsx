@@ -32,8 +32,8 @@ function RouteComponent() {
   const { theme } = useRouteContext({ from: "__root__" });
 
   return (
-    <main className="min-h-svh bg-muted/40 p-3 sm:p-4 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(28rem,0.88fr)] lg:gap-4">
-      <section className="flex min-h-[calc(100svh-1.5rem)] flex-col rounded-3xl bg-card px-5 py-5 shadow-[0_0_0_1px_oklch(0_0_0/0.05),0_12px_40px_oklch(0_0_0/0.06)] sm:min-h-[calc(100svh-2rem)] sm:px-8 sm:py-7 lg:px-12 lg:py-9 dark:shadow-[0_0_0_1px_oklch(1_0_0/0.08)]">
+    <main className="min-h-svh bg-muted/40 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(28rem,0.88fr)]">
+      <section className="flex min-h-[calc(100svh-1.5rem)] flex-col bg-card px-10 py-10 shadow-[0_0_0_1px_oklch(0_0_0/0.05),0_12px_40px_oklch(0_0_0/0.06)] sm:min-h-[calc(100svh-2rem)] sm:px-8 sm:py-7 lg:px-14 lg:py-9 dark:shadow-[0_0_0_1px_oklch(1_0_0/0.08)]">
         <header className="flex items-center justify-between gap-4">
           <Link
             to="/"
@@ -66,12 +66,9 @@ function RouteComponent() {
         </footer>
       </section>
 
-      <aside className="auth-visual relative hidden overflow-hidden rounded-3xl lg:flex lg:flex-col lg:justify-end">
+      <aside className="auth-visual relative hidden overflow-hidden lg:flex lg:flex-col lg:justify-end">
         <div className="auth-visual-overlay absolute inset-0" aria-hidden="true" />
         <div className="relative z-10 max-w-xl p-10 text-white xl:p-14">
-          <p className="mb-4 text-xs font-semibold tracking-[0.16em] text-white/70 uppercase">
-            One workspace, less friction
-          </p>
           <p className="text-3xl leading-tight font-semibold tracking-tight text-balance xl:text-4xl">
             Focus on the work that matters. We’ll keep your account safe and ready.
           </p>
