@@ -19,6 +19,7 @@
     "@repo/db": "workspace:*",
     "@repo/mail": "workspace:*",
     "@tanstack/react-query": "catalog:",
-    "@tanstack/react-start": "catalog:"
+    "@tanstack/react-start": "catalog:",
+    "drizzle-orm": "catalog:"
   }
 }

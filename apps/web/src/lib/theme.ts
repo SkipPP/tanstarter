@@ -19,9 +19,9 @@ export const themeQueryOptions = () =>
     // Cookie only changes via setThemeServerFn; invalidate manually on toggle.
     staleTime: Number.POSITIVE_INFINITY,
   });
-  
+
 export const setThemeServerFn = createServerFn()
-  .inputValidator(setThemeValidator)
+  .validator(setThemeValidator)
   .handler(({ data }) =>
     setCookie(storageKey, data, {
       path: "/",
