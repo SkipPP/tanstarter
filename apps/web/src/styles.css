@@ -7,3 +7,26 @@
 @theme inline {
   --font-sans: "Inter Variable", sans-serif;
 }
+
+@media (min-width: 64rem) {
+  .auth-visual {
+    background-image: url("/background-login.jpg");
+    background-position: center;
+    background-size: cover;
+  }
+
+  .dark .auth-visual {
+    filter: grayscale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

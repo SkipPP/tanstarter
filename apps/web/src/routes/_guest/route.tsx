@@ -8,10 +8,7 @@ export const Route = createFileRoute("/_guest")({
   beforeLoad: async ({ context }) => {
     const REDIRECT_URL = "/app";
 
-    const user = await context.queryClient.ensureQueryData({
-      ...authQueryOptions(),
-      revalidateIfStale: true,
-    });
+    const user = await context.queryClient.ensureQueryData(authQueryOptions());
 
     if (user) {
       throw redirect({
@@ -23,6 +20,12 @@ export const Route = createFileRoute("/_guest")({
       redirectUrl: REDIRECT_URL,
     };
   },
+  head: () => ({
+    meta: [
+      { title: "Account access — TanStarter" },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
 });
 
 function RouteComponent() {
@@ -37,8 +40,10 @@ function RouteComponent() {
           <Link to="/" className="flex items-center gap-2 font-medium">
             <img
               src={theme === "dark" ? "/logo-partitio-blanc.png" : "/logo-partitio.png"}
-              alt="Tanstarter"
-              className="h-8 w-full"
+              alt="TanStarter"
+              width="400"
+              height="108"
+              className="h-8 w-auto"
             />
           </Link>
         </div>
@@ -49,29 +54,10 @@ function RouteComponent() {
           </div>
         </div>
 
-        <span className="text-center text-xs text-muted-foreground">
-          By clicking continue, you agree to our <br />
-          <Link to="/" className="underline">
-            Terms of Service
-          </Link>{" "}
-          and{" "}
-          <Link to="/" className="underline">
-            Privacy Policy
-          </Link>
-          .
-        </span>
+        <p className="text-center text-xs text-muted-foreground">TanStarter account access</p>
       </section>
 
-      <section className="relative hidden flex-col gap-4 p-10 lg:flex">
-        <img
-          src="/background-login.jpg"
-          alt="Background login"
-          loading="eager"
-          decoding="async"
-          fetchPriority="high"
-          className="absolute inset-0 h-full w-full object-cover dark:grayscale"
-        />
-      </section>
+      <div className="auth-visual hidden lg:block" aria-hidden="true" />
     </main>
   );
 }

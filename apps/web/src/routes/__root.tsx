@@ -14,6 +14,10 @@ import { themeQueryOptions } from "@/lib/theme";
 
 import appCss from "@/styles.css?url";
 
+const siteUrl = new URL("/", import.meta.env.VITE_BASE_URL).href;
+const siteDescription =
+  "A production-minded TanStack Start monorepo starter for building TypeScript SaaS applications.";
+
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
   user: AuthQueryResult;
@@ -41,11 +45,56 @@ export const Route = createRootRouteWithContext<{
       },
       {
         name: "description",
-        content:
-          "A minimal monorepo starter for 🏝️ TanStack Start, curated from the best of the TypeScript ecosystem.",
+        content: siteDescription,
+      },
+      {
+        name: "theme-color",
+        media: "(prefers-color-scheme: light)",
+        content: "#ffffff",
+      },
+      {
+        name: "theme-color",
+        media: "(prefers-color-scheme: dark)",
+        content: "#09090b",
+      },
+      {
+        property: "og:type",
+        content: "website",
+      },
+      {
+        property: "og:site_name",
+        content: "TanStarter",
+      },
+      {
+        property: "og:title",
+        content: "TanStarter",
+      },
+      {
+        property: "og:description",
+        content: siteDescription,
+      },
+      {
+        property: "og:url",
+        content: siteUrl,
+      },
+      {
+        name: "twitter:card",
+        content: "summary",
+      },
+      {
+        name: "twitter:title",
+        content: "TanStarter",
+      },
+      {
+        name: "twitter:description",
+        content: siteDescription,
       },
     ],
-    links: [{ rel: "stylesheet", href: appCss }],
+    links: [
+      { rel: "canonical", href: siteUrl },
+      { rel: "icon", href: "/favicon.ico", sizes: "any" },
+      { rel: "stylesheet", href: appCss },
+    ],
   }),
 });
 

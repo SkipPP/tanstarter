@@ -1,14 +1,19 @@
+import { queryOptions } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
 import { $getGreeting } from "@/lib/example-protected-server";
 
+const greetingQueryOptions = () =>
+  queryOptions({
+    queryKey: ["greeting"],
+    queryFn: ({ signal }) => $getGreeting({ signal }),
+    staleTime: 60_000,
+  });
+
 export const Route = createFileRoute("/_auth/app/")({
   component: AppIndex,
   loader: async ({ context }) => {
-    const greeting = await context.queryClient.ensureQueryData({
-      queryKey: ["greeting"],
-      queryFn: () => $getGreeting(),
-    });
+    const greeting = await context.queryClient.ensureQueryData(greetingQueryOptions());
 
     return {
       greeting,

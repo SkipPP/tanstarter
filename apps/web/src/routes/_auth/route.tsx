@@ -4,10 +4,7 @@ import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 export const Route = createFileRoute("/_auth")({
   component: Outlet,
   beforeLoad: async ({ context }) => {
-    const user = await context.queryClient.ensureQueryData({
-      ...authQueryOptions(),
-      revalidateIfStale: true,
-    });
+    const user = await context.queryClient.ensureQueryData(authQueryOptions());
 
     if (!user) {
       throw redirect({ to: "/login" });
@@ -16,4 +13,10 @@ export const Route = createFileRoute("/_auth")({
     // re-return to update type as non-null for child routes
     return { user };
   },
+  head: () => ({
+    meta: [
+      { title: "Dashboard — TanStarter" },
+      { name: "robots", content: "noindex, nofollow, noarchive" },
+    ],
+  }),
 });
