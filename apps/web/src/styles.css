@@ -8,15 +8,47 @@
   --font-sans: "Inter Variable", sans-serif;
 }
 
+.auth-form [data-slot="field-group"] {
+  gap: 1.25rem;
+}
+
+.auth-form [data-slot="input"],
+.auth-form [data-slot="input-group"] {
+  min-height: 2.75rem;
+}
+
+.auth-form [data-slot="input"] {
+  font-size: 1rem;
+}
+
+.auth-form [data-slot="button"]:not([data-size^="icon"]) {
+  min-height: 2.75rem;
+}
+
 @media (min-width: 64rem) {
   .auth-visual {
     background-image: url("/background-login.jpg");
     background-position: center;
     background-size: cover;
+    outline: 1px solid oklch(0 0 0 / 0.1);
+    outline-offset: -1px;
+  }
+
+  .auth-visual-overlay {
+    background:
+      linear-gradient(to top, oklch(0.12 0.02 260 / 0.9), transparent 70%),
+      linear-gradient(to bottom right, oklch(0.12 0.02 260 / 0.12), oklch(0.12 0.02 260 / 0.35));
   }
 
   .dark .auth-visual {
     filter: grayscale(1);
+    outline-color: oklch(1 0 0 / 0.1);
+  }
+}
+
+@media (min-width: 40rem) {
+  .auth-form [data-slot="input"] {
+    font-size: 0.875rem;
   }
 }
 

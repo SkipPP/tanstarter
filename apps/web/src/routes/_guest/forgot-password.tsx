@@ -1,14 +1,12 @@
 import { authClient } from "@repo/auth/auth-client";
-import { Button } from "@repo/ui/components/button";
-import { Field, FieldGroup } from "@repo/ui/components/field";
+import { FieldGroup } from "@repo/ui/components/field";
 import { cn } from "@repo/ui/lib/utils";
-import { IconArrowLeft } from "@tabler/icons-react";
 import { revalidateLogic } from "@tanstack/react-form-start";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useId } from "react";
-import { toast } from "sonner";
+import { createFileRoute } from "@tanstack/react-router";
+import { useId, useState } from "react";
 import { z } from "zod";
 
+import { AuthPageHeader, AuthPagePrompt, AuthState } from "@/components/auth-page";
 import { useAppForm } from "@/components/form";
 
 export const Route = createFileRoute("/_guest/forgot-password")({
@@ -16,11 +14,12 @@ export const Route = createFileRoute("/_guest/forgot-password")({
 });
 
 const formValidator = z.object({
-  email: z.email("Email is required"),
+  email: z.email("Enter a valid email address"),
 });
 
 function ForgotPasswordForm({ className, ...props }: React.ComponentPropsWithoutRef<"form">) {
   const id = useId();
+  const [isComplete, setIsComplete] = useState(false);
 
   const form = useAppForm({
     defaultValues: {
@@ -33,9 +32,7 @@ function ForgotPasswordForm({ className, ...props }: React.ComponentPropsWithout
     validationLogic: revalidateLogic(),
     onSubmit: async ({ value }) => {
       const showGenericConfirmation = () => {
-        toast.success(
-          "If an account exists for that email, a password reset link will be sent shortly.",
-        );
+        setIsComplete(true);
       };
 
       await authClient.requestPasswordReset(
@@ -52,10 +49,21 @@ function ForgotPasswordForm({ className, ...props }: React.ComponentPropsWithout
     },
   });
 
+  if (isComplete) {
+    return (
+      <AuthState
+        tone="success"
+        title="Check your inbox"
+        description="If an account exists for that email address, we’ll send a password reset link shortly."
+        action={{ label: "Return to sign in", to: "/login" }}
+      />
+    );
+  }
+
   return (
     <form
       id={id}
-      className={cn("flex flex-col gap-6", className)}
+      className={cn("flex flex-col gap-8", className)}
       onSubmit={(e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -65,34 +73,32 @@ function ForgotPasswordForm({ className, ...props }: React.ComponentPropsWithout
       {...props}
     >
       <FieldGroup>
-        <div className="flex flex-col items-center gap-1 text-center">
-          <h1 className="text-2xl font-bold">Forgot your password ?</h1>
-
-          <p className="hidden text-sm text-balance text-muted-foreground lg:block">
-            Enter your email below to request a password reset.
-          </p>
-        </div>
+        <AuthPageHeader
+          eyebrow="Account recovery"
+          title="Reset your password"
+          description="Enter your email address and we’ll send you a secure link to choose a new password."
+        />
 
         <form.AppField name="email">
           {(field) => (
-            <field.InputField label="Email" placeholder="mail@example.com" type="email" required />
+            <field.InputField
+              label="Email address"
+              placeholder="name@example.com"
+              type="email"
+              autoComplete="email"
+              required
+            />
           )}
         </form.AppField>
 
         <form.AppForm>
           <form.SubmitButton
-            label="Request Password Reset"
-            loadingLabel="Requesting Password Reset..."
+            label="Send reset link"
+            loadingLabel="Sending reset link…"
           />
         </form.AppForm>
 
-        <Field className="w-fit self-center">
-          <Button asChild variant="link" size="sm" className="text-muted-foreground underline">
-            <Link to="/login">
-              <IconArrowLeft /> Back to login
-            </Link>
-          </Button>
-        </Field>
+        <AuthPagePrompt prompt="Remembered your password?" label="Return to sign in" to="/login" />
       </FieldGroup>
     </form>
   );

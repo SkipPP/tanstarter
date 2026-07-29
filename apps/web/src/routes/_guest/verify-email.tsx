@@ -1,12 +1,11 @@
 import { authClient } from "@repo/auth/auth-client";
-import { Button } from "@repo/ui/components/button";
-import { FieldGroup } from "@repo/ui/components/field";
 import { cn } from "@repo/ui/lib/utils";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { AuthState } from "@/components/auth-page";
 import { safeInternalRedirectPath } from "@/lib/safe-redirect";
 
 export const Route = createFileRoute("/_guest/verify-email")({
@@ -62,34 +61,27 @@ function VerifyEmailForm({ className, ...props }: React.ComponentPropsWithoutRef
               : "This verification link is invalid or has expired.";
 
           setErrorMessage(message);
-          toast.error(message);
         },
       },
     );
   }, [navigate, callbackURL, token]);
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <FieldGroup>
-        <div className="flex flex-col items-center gap-1 text-center">
-          <h1 className="text-2xl font-bold">
-            {errorMessage ? "We couldn't verify your email." : "Verifying your email address..."}
-          </h1>
-        </div>
-
-        {errorMessage ? (
-          <>
-            <div className="text-center text-sm text-destructive">{errorMessage}</div>
-            <Button asChild variant="outline">
-              <Link to="/login">Return to login</Link>
-            </Button>
-          </>
-        ) : (
-          <div className="text-center text-sm text-muted-foreground">
-            This should only take a moment.
-          </div>
-        )}
-      </FieldGroup>
+    <div className={cn("flex flex-col", className)} {...props}>
+      {errorMessage ? (
+        <AuthState
+          tone="error"
+          title="We couldn’t verify your email"
+          description={errorMessage}
+          action={{ label: "Return to sign in", to: "/login" }}
+        />
+      ) : (
+        <AuthState
+          tone="loading"
+          title="Verifying your email"
+          description="This should only take a moment. You’ll be redirected automatically."
+        />
+      )}
     </div>
   );
 }

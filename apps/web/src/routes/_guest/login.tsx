@@ -1,15 +1,14 @@
 import { authClient } from "@repo/auth/auth-client";
 import { $getOAuthProviders } from "@repo/auth/tanstack/functions";
-import { Button } from "@repo/ui/components/button";
 import { Field, FieldGroup } from "@repo/ui/components/field";
 import { cn } from "@repo/ui/lib/utils";
-import { IconArrowRight } from "@tabler/icons-react";
 import { revalidateLogic } from "@tanstack/react-form-start";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useId } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { AuthPageHeader, AuthPagePrompt } from "@/components/auth-page";
 import { useAppForm } from "@/components/form";
 import { SocialLoginButtons } from "@/components/social-login-buttons";
 import { safeInternalRedirectPath } from "@/lib/safe-redirect";
@@ -20,8 +19,8 @@ export const Route = createFileRoute("/_guest/login")({
 });
 
 const formValidator = z.object({
-  email: z.email("Email is required"),
-  password: z.string().min(8, "Password is too short"),
+  email: z.email("Enter a valid email address"),
+  password: z.string().min(8, "Enter your password (at least 8 characters)"),
 });
 
 function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"form">) {
@@ -97,7 +96,7 @@ function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"form
   return (
     <form
       id={id}
-      className={cn("flex flex-col gap-6", className)}
+      className={cn("flex flex-col gap-8", className)}
       onSubmit={(e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -107,17 +106,21 @@ function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"form
       {...props}
     >
       <FieldGroup>
-        <div className="flex flex-col items-center gap-1 text-center">
-          <h1 className="text-2xl font-bold">Login to your account</h1>
-
-          <p className="hidden text-sm text-balance text-muted-foreground lg:block">
-            Enter your email below to login to your account
-          </p>
-        </div>
+        <AuthPageHeader
+          eyebrow="Welcome back"
+          title="Sign in to your account"
+          description="Enter your details to continue to your workspace."
+        />
 
         <form.AppField name="email">
           {(field) => (
-            <field.InputField label="Email" placeholder="mail@example.com" type="email" />
+            <field.InputField
+              label="Email address"
+              placeholder="name@example.com"
+              type="email"
+              autoComplete="email"
+              required
+            />
           )}
         </form.AppField>
 
@@ -130,9 +133,9 @@ function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"form
               action={
                 <Link
                   to="/forgot-password"
-                  className="ml-auto text-xs text-muted-foreground hover:underline"
+                  className="ms-auto text-xs font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                 >
-                  Forgot password ?
+                  Forgot password?
                 </Link>
               }
             />
@@ -141,25 +144,19 @@ function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"form
 
         <Field>
           <form.AppForm>
-            <form.SubmitButton label="Login" loadingLabel="Logging in..." />
+            <form.SubmitButton label="Sign in" loadingLabel="Signing in…" />
           </form.AppForm>
 
           {providers.length > 0 ? (
             <SocialLoginButtons
               callbackURL={safeRedirectUrl}
-              actionLabel="Login"
+              actionLabel="Continue"
               providers={providers}
             />
           ) : null}
         </Field>
 
-        <Field className="w-fit self-center">
-          <Button asChild variant="link" size="sm" className="text-muted-foreground underline">
-            <Link to="/signup">
-              <IconArrowRight /> Don't have an account ? Sign up
-            </Link>
-          </Button>
-        </Field>
+        <AuthPagePrompt prompt="New to TanStarter?" label="Create an account" to="/signup" />
       </FieldGroup>
     </form>
   );

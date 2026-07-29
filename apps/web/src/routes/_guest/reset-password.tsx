@@ -1,13 +1,13 @@
 import { authClient } from "@repo/auth/auth-client";
-import { Button } from "@repo/ui/components/button";
 import { FieldGroup } from "@repo/ui/components/field";
 import { cn } from "@repo/ui/lib/utils";
 import { revalidateLogic } from "@tanstack/react-form-start";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useId } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { AuthPageHeader, AuthState } from "@/components/auth-page";
 import { useAppForm } from "@/components/form";
 
 export const Route = createFileRoute("/_guest/reset-password")({
@@ -19,12 +19,12 @@ export const Route = createFileRoute("/_guest/reset-password")({
 
 const formValidator = z
   .object({
-    password: z.string().min(8, "Password is too short"),
-    confirmPassword: z.string().min(8, "Confirm password is too short"),
+    password: z.string().min(8, "Use at least 8 characters"),
+    confirmPassword: z.string().min(8, "Enter the password again"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     path: ["confirmPassword"],
-    message: "Passwords do not match",
+    message: "Make sure both passwords match",
   });
 
 function ResetPasswordForm({ className, ...props }: React.ComponentPropsWithoutRef<"form">) {
@@ -75,12 +75,13 @@ function ResetPasswordForm({ className, ...props }: React.ComponentPropsWithoutR
 
   if (!token) {
     return (
-      <div className={cn("flex flex-col gap-6 text-center", className)}>
-        <h1 className="text-2xl font-bold">Invalid password reset link</h1>
-        <p className="text-sm text-muted-foreground">Request a new link to reset your password.</p>
-        <Button asChild>
-          <Link to="/forgot-password">Request a new link</Link>
-        </Button>
+      <div className={className}>
+        <AuthState
+          tone="error"
+          title="This reset link isn’t valid"
+          description="The link may have expired or already been used. Request a new one to continue."
+          action={{ label: "Request a new link", to: "/forgot-password" }}
+        />
       </div>
     );
   }
@@ -88,7 +89,7 @@ function ResetPasswordForm({ className, ...props }: React.ComponentPropsWithoutR
   return (
     <form
       id={id}
-      className={cn("flex flex-col gap-6", className)}
+      className={cn("flex flex-col gap-8", className)}
       onSubmit={(e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -98,19 +99,18 @@ function ResetPasswordForm({ className, ...props }: React.ComponentPropsWithoutR
       {...props}
     >
       <FieldGroup>
-        <div className="flex flex-col items-center gap-1 text-center">
-          <h1 className="text-2xl font-bold">Reset your password</h1>
-
-          <p className="hidden text-sm text-balance text-muted-foreground lg:block">
-            Enter your new password below to reset your password.
-          </p>
-        </div>
+        <AuthPageHeader
+          eyebrow="Choose a new password"
+          title="Secure your account"
+          description="Create a new password with at least 8 characters. Make it unique to this account."
+        />
 
         <form.AppField name="password">
           {(field) => (
             <field.PasswordField
               label="New password"
-              placeholder="************"
+              placeholder="•••••••••••••"
+              description="Use at least 8 characters."
               autoComplete="new-password"
               required
             />
@@ -121,7 +121,7 @@ function ResetPasswordForm({ className, ...props }: React.ComponentPropsWithoutR
           {(field) => (
             <field.PasswordField
               label="Confirm password"
-              placeholder="************"
+              placeholder="•••••••••••••"
               autoComplete="new-password"
               required
             />
@@ -129,7 +129,7 @@ function ResetPasswordForm({ className, ...props }: React.ComponentPropsWithoutR
         </form.AppField>
 
         <form.AppForm>
-          <form.SubmitButton label="Reset Password" loadingLabel="Resetting Password..." />
+          <form.SubmitButton label="Save new password" loadingLabel="Saving new password…" />
         </form.AppForm>
       </FieldGroup>
     </form>

@@ -56,7 +56,7 @@ export function SocialLoginButtons({
   callbackURL,
   providers = ["google"],
   actionLabel = "Login",
-  loadingLabel = actionLabel === "Sign up" ? "Signing up..." : "Logging in...",
+  loadingLabel = `${actionLabel}…`,
   variant = "outline",
   className,
 }: SocialLoginButtonsProps) {
@@ -108,42 +108,46 @@ export function SocialLoginButtons({
   };
 
   return (
-    <fieldset
-      className={cn(
-        "m-0 min-w-0 border-0 p-0",
-        providers.length > 1 ? "grid gap-2 lg:grid-cols-2" : "flex flex-col",
-      )}
-    >
-      <legend className="sr-only">{actionLabel} with social providers</legend>
-      {providers.map((providerId) => {
-        const config = PROVIDER_CONFIG[providerId];
-        if (!config) return null;
+    <div className="space-y-3">
+      <p className="text-center text-xs font-medium text-muted-foreground">Or continue with</p>
+      <fieldset
+        className={cn(
+          "m-0 min-w-0 border-0 p-0",
+          providers.length > 1 ? "grid gap-3 sm:grid-cols-2" : "flex flex-col",
+        )}
+      >
+        <legend className="sr-only">{actionLabel} with a social provider</legend>
+        {providers.map((providerId) => {
+          const config = PROVIDER_CONFIG[providerId];
+          if (!config) return null;
 
-        const { label, Icon } = config;
-        const buttonLabel = `${actionLabel} with ${label}`;
-        const isProviderSubmitting = submittingProvider === providerId;
-        const isDisabled = submittingProvider !== null;
+          const { label, Icon } = config;
+          const buttonLabel = `${actionLabel} with ${label}`;
+          const isProviderSubmitting = submittingProvider === providerId;
+          const isDisabled = submittingProvider !== null;
 
-        return (
-          <Button
-            key={providerId}
-            type="button"
-            variant={variant}
-            className={className}
-            disabled={isDisabled}
-            onClick={() => handleSignIn(providerId)}
-            aria-label={buttonLabel}
-            aria-busy={isProviderSubmitting}
-          >
-            {isProviderSubmitting ? (
-              <Spinner aria-hidden />
-            ) : (
-              <Icon className="size-4" aria-hidden />
-            )}
-            {isProviderSubmitting ? loadingLabel : buttonLabel}
-          </Button>
-        );
-      })}
-    </fieldset>
+          return (
+            <Button
+              key={providerId}
+              type="button"
+              size="lg"
+              variant={variant}
+              className={cn("transition-transform active:scale-[0.96]", className)}
+              disabled={isDisabled}
+              onClick={() => handleSignIn(providerId)}
+              aria-label={buttonLabel}
+              aria-busy={isProviderSubmitting}
+            >
+              {isProviderSubmitting ? (
+                <Spinner aria-hidden />
+              ) : (
+                <Icon className="size-4" aria-hidden />
+              )}
+              {isProviderSubmitting ? loadingLabel : buttonLabel}
+            </Button>
+          );
+        })}
+      </fieldset>
+    </div>
   );
 }

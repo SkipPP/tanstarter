@@ -1,15 +1,14 @@
 import { authClient } from "@repo/auth/auth-client";
 import { $getOAuthProviders } from "@repo/auth/tanstack/functions";
-import { Button } from "@repo/ui/components/button";
 import { Field, FieldGroup } from "@repo/ui/components/field";
 import { cn } from "@repo/ui/lib/utils";
-import { IconArrowLeft } from "@tabler/icons-react";
 import { revalidateLogic } from "@tanstack/react-form-start";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useId } from "react";
 import { toast } from "sonner";
 import z from "zod";
 
+import { AuthPageHeader, AuthPagePrompt } from "@/components/auth-page";
 import { useAppForm } from "@/components/form";
 import { SocialLoginButtons } from "@/components/social-login-buttons";
 import { safeInternalRedirectPath } from "@/lib/safe-redirect";
@@ -21,14 +20,14 @@ export const Route = createFileRoute("/_guest/signup")({
 
 const formValidator = z
   .object({
-    name: z.string().min(1, "Name is required"),
-    email: z.email("Email is required"),
-    password: z.string().min(8, "Password is too short"),
-    confirmPassword: z.string().min(8, "Confirm password is too short"),
+    name: z.string().trim().min(1, "Enter your name"),
+    email: z.email("Enter a valid email address"),
+    password: z.string().min(8, "Use at least 8 characters"),
+    confirmPassword: z.string().min(8, "Enter the password again"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     path: ["confirmPassword"],
-    message: "Passwords do not match",
+    message: "Make sure both passwords match",
   });
 
 function SignupForm({ className, ...props }: React.ComponentPropsWithoutRef<"form">) {
@@ -82,7 +81,7 @@ function SignupForm({ className, ...props }: React.ComponentPropsWithoutRef<"for
   return (
     <form
       id={id}
-      className={cn("flex flex-col gap-6", className)}
+      className={cn("flex flex-col gap-8", className)}
       onSubmit={(e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -92,21 +91,33 @@ function SignupForm({ className, ...props }: React.ComponentPropsWithoutRef<"for
       {...props}
     >
       <FieldGroup>
-        <div className="flex flex-col items-center gap-1 text-center">
-          <h1 className="text-2xl font-bold">Create an account</h1>
-
-          <p className="hidden text-sm text-balance text-muted-foreground lg:block">
-            Enter your informations to create your account
-          </p>
-        </div>
+        <AuthPageHeader
+          eyebrow="Get started"
+          title="Create your account"
+          description="Set up your profile and start working in just a few moments."
+        />
 
         <form.AppField name="name">
-          {(field) => <field.InputField label="Name" placeholder="John Doe" type="text" required />}
+          {(field) => (
+            <field.InputField
+              label="Full name"
+              placeholder="John Doe"
+              type="text"
+              autoComplete="name"
+              required
+            />
+          )}
         </form.AppField>
 
         <form.AppField name="email">
           {(field) => (
-            <field.InputField label="Email" placeholder="mail@example.com" type="email" required />
+            <field.InputField
+              label="Email address"
+              placeholder="name@example.com"
+              type="email"
+              autoComplete="email"
+              required
+            />
           )}
         </form.AppField>
 
@@ -115,6 +126,7 @@ function SignupForm({ className, ...props }: React.ComponentPropsWithoutRef<"for
             <field.PasswordField
               label="Password"
               placeholder="•••••••••••••"
+              description="Use at least 8 characters."
               autoComplete="new-password"
               required
             />
@@ -124,7 +136,7 @@ function SignupForm({ className, ...props }: React.ComponentPropsWithoutRef<"for
         <form.AppField name="confirmPassword">
           {(field) => (
             <field.PasswordField
-              label="Confirm Password"
+              label="Confirm password"
               placeholder="•••••••••••••"
               autoComplete="new-password"
               required
@@ -134,7 +146,7 @@ function SignupForm({ className, ...props }: React.ComponentPropsWithoutRef<"for
 
         <Field>
           <form.AppForm>
-            <form.SubmitButton label="Create Account" loadingLabel="Creating account..." />
+            <form.SubmitButton label="Create account" loadingLabel="Creating account…" />
           </form.AppForm>
 
           {providers.length > 0 ? (
@@ -146,13 +158,7 @@ function SignupForm({ className, ...props }: React.ComponentPropsWithoutRef<"for
           ) : null}
         </Field>
 
-        <Field className="w-fit self-center">
-          <Button asChild variant="link" size="sm" className="text-muted-foreground underline">
-            <Link to="/login">
-              <IconArrowLeft /> Already have an account ? Sign in
-            </Link>
-          </Button>
-        </Field>
+        <AuthPagePrompt prompt="Already have an account?" label="Sign in" to="/login" />
       </FieldGroup>
     </form>
   );

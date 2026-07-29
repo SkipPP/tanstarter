@@ -12,6 +12,7 @@ import {
   FieldTitle,
 } from "@repo/ui/components/field";
 import { Input } from "@repo/ui/components/input";
+import { Spinner } from "@repo/ui/components/spinner";
 import {
   InputGroup,
   InputGroupInput,
@@ -41,6 +42,7 @@ type InputFieldProps = {
   readonly placeholder: string;
   readonly type: string;
   readonly description?: string;
+  readonly autoComplete?: string;
   readonly required?: boolean;
 };
 
@@ -49,9 +51,11 @@ export const InputField = ({
   placeholder,
   type,
   description,
+  autoComplete,
   required,
 }: InputFieldProps) => {
   const field = useFieldContext<string>();
+  const errorId = `${field.name}-error`;
 
   const [error] = field.state.meta.errors;
   const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
@@ -69,14 +73,17 @@ export const InputField = ({
         onBlur={field.handleBlur}
         onChange={(e) => field.handleChange(e.target.value)}
         aria-invalid={isInvalid}
+        aria-describedby={isInvalid ? errorId : undefined}
         placeholder={placeholder}
-        autoComplete="off"
+        autoComplete={autoComplete}
+        spellCheck={type === "email" ? false : undefined}
+        required={required}
         type={type}
       />
 
       {description && !error && <FieldDescription>{description}</FieldDescription>}
 
-      {isInvalid && <FieldError errors={field.state.meta.errors} />}
+      {isInvalid && <FieldError id={errorId} errors={field.state.meta.errors} />}
     </Field>
   );
 };
@@ -100,16 +107,19 @@ export const PasswordField = ({
 }: PasswordFieldProps) => {
   const field = useFieldContext<string>();
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const errorId = `${field.name}-error`;
 
   const [error] = field.state.meta.errors;
   const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
   return (
     <Field data-invalid={isInvalid}>
-      <FieldLabel htmlFor={field.name}>
-        {label} {required && <span className="text-destructive">*</span>}
-        {action && action}
-      </FieldLabel>
+      <div className="flex items-center gap-3">
+        <FieldLabel htmlFor={field.name}>
+          {label} {required && <span className="text-destructive">*</span>}
+        </FieldLabel>
+        {action}
+      </div>
 
       <InputGroup>
         <InputGroupInput
@@ -119,28 +129,30 @@ export const PasswordField = ({
           onBlur={field.handleBlur}
           onChange={(e) => field.handleChange(e.target.value)}
           aria-invalid={isInvalid}
+          aria-describedby={isInvalid ? errorId : undefined}
           placeholder={placeholder}
           autoComplete={autoComplete ?? "new-password"}
+          required={required}
           type={showPassword ? "text" : "password"}
         />
 
         <InputGroupAddon align="inline-end" interactive>
           <InputGroupButton
-            aria-label="Toggle password visibility"
-            title="Toggle password visibility"
+            aria-label={showPassword ? "Hide password" : "Show password"}
+            title={showPassword ? "Hide password" : "Show password"}
             size="icon-xs"
             onClick={() => {
               setShowPassword(!showPassword);
             }}
           >
-            {showPassword ? <IconEyeOff /> : <IconEye />}
+            {showPassword ? <IconEyeOff aria-hidden /> : <IconEye aria-hidden />}
           </InputGroupButton>
         </InputGroupAddon>
       </InputGroup>
 
       {description && !error && <FieldDescription>{description}</FieldDescription>}
 
-      {isInvalid && <FieldError errors={field.state.meta.errors} />}
+      {isInvalid && <FieldError id={errorId} errors={field.state.meta.errors} />}
     </Field>
   );
 };
@@ -388,9 +400,10 @@ export const SubmitButton = ({ label, loadingLabel }: SubmitButtonProps) => {
   const form = useFormContext();
 
   return (
-    <form.Subscribe selector={(state) => [state.isSubmitting, state.canSubmit]}>
-      {([isSubmitting, canSubmit]) => (
-        <Button type="submit" disabled={isSubmitting || !canSubmit}>
+    <form.Subscribe selector={(state) => state.isSubmitting}>
+      {(isSubmitting) => (
+        <Button type="submit" size="lg" disabled={isSubmitting} aria-busy={isSubmitting}>
+          {isSubmitting ? <Spinner aria-hidden /> : null}
           {isSubmitting ? (loadingLabel ?? "Submitting...") : label}
         </Button>
       )}
