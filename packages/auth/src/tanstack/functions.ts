@@ -2,6 +2,7 @@ import { createServerFn, createServerOnlyFn } from "@tanstack/react-start";
 import { getRequest, setResponseHeader } from "@tanstack/react-start/server";
 
 import { auth } from "../auth";
+import { getOAuthProviders, type OAuthProviderId } from "../env";
 
 /**
  * This server function is meant to be called via authQueryOptions() in queries.ts,
@@ -15,6 +16,17 @@ export const $getUser = createServerFn({ method: "GET" }).handler(async () => {
 
   return user;
 });
+
+/**
+ * Returns public auth capabilities without exposing OAuth credentials.
+ */
+export const $getOAuthProviders = createServerFn({ method: "GET" }).handler(
+  (): OAuthProviderId[] => {
+    const providers = getOAuthProviders();
+
+    return (["google", "github"] as const).filter((provider) => Boolean(providers[provider]));
+  },
+);
 
 interface GetUserServerQuery {
   disableCookieCache?: boolean | undefined;
@@ -39,5 +51,17 @@ export const _getUser = createServerOnlyFn(async (query?: GetUserServerQuery) =>
     setResponseHeader("Set-Cookie", cookies);
   }
 
-  return session.response?.user || null;
+  const user = session.response?.user;
+  if (!user) {
+    return null;
+  }
+
+  // Keep the client/session DTO intentionally smaller than the database model.
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    emailVerified: user.emailVerified,
+    image: user.image,
+  };
 });

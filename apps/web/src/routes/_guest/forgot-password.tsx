@@ -32,18 +32,21 @@ function ForgotPasswordForm({ className, ...props }: React.ComponentPropsWithout
     },
     validationLogic: revalidateLogic(),
     onSubmit: async ({ value }) => {
+      const showGenericConfirmation = () => {
+        toast.success(
+          "If an account exists for that email, a password reset link will be sent shortly.",
+        );
+      };
+
       await authClient.requestPasswordReset(
         {
           email: value.email,
           redirectTo: "/reset-password",
         },
         {
-          onSuccess: () => {
-            toast.success("A password reset email has been sent to your email address.");
-          },
-          onError: ({ error }) => {
-            toast.error(error.message || "An error occurred while requesting a password reset.");
-          },
+          onSuccess: showGenericConfirmation,
+          // Keep the response indistinguishable to avoid account enumeration.
+          onError: showGenericConfirmation,
         },
       );
     },

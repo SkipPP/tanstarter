@@ -24,7 +24,9 @@ export function DefaultCatchBoundary({ error }: Readonly<ErrorComponentProps>) {
     select: (state) => state.id === rootRouteId,
   });
 
-  console.error(error);
+  if (import.meta.env.DEV) {
+    console.error(error);
+  }
 
   return (
     <Empty>
@@ -38,7 +40,7 @@ export function DefaultCatchBoundary({ error }: Readonly<ErrorComponentProps>) {
         <EmptyDescription>An unexpected error occurred. Please try again later.</EmptyDescription>
       </EmptyHeader>
 
-      <ErrorComponent error={error} />
+      {import.meta.env.DEV ? <ErrorComponent error={error} /> : null}
 
       <EmptyContent className="flex-row items-center justify-center gap-2">
         <Button

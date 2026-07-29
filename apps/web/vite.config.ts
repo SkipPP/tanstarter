@@ -6,7 +6,37 @@ import viteReact from "@vitejs/plugin-react";
 import { nitro } from "nitro/vite";
 import { defineConfig } from "vite";
 
-export default defineConfig(() => {
+export default defineConfig(({ mode }) => {
+  const isProduction = mode === "production";
+  const contentSecurityPolicy = [
+    "default-src 'self'",
+    // TanStack Start hydration currently emits inline scripts. Keep this
+    // explicit until nonce support is wired through the SSR renderer.
+    `script-src 'self' 'unsafe-inline'${isProduction ? "" : " 'unsafe-eval'"}`,
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: blob:",
+    "font-src 'self' data:",
+    `connect-src 'self'${isProduction ? "" : " ws: wss:"}`,
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+    ...(isProduction ? ["upgrade-insecure-requests"] : []),
+  ].join("; ");
+
+  const securityHeaders: Record<string, string> = {
+    "Content-Security-Policy": contentSecurityPolicy,
+    "Cross-Origin-Opener-Policy": "same-origin",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+  };
+
+  if (isProduction) {
+    securityHeaders["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains";
+  }
+
   return {
     server: {
       port: 3000,
@@ -35,6 +65,17 @@ export default defineConfig(() => {
     optimizeDeps: {
       include: ["@tanstack/react-form-start"],
     },
-    plugins: [tailwindcss(), tanstackStart(), viteReact(), nitro()],
+    plugins: [
+      tailwindcss(),
+      tanstackStart(),
+      viteReact(),
+      nitro({
+        routeRules: {
+          "/**": {
+            headers: securityHeaders,
+          },
+        },
+      }),
+    ],
   };
 });

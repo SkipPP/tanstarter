@@ -6,13 +6,33 @@ import { resend } from "@repo/mail/resend";
 import { betterAuth } from "better-auth/minimal";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 
-import { requireEnv } from "./env";
+import { getOAuthProviders, requireEnv, requireHttpUrl } from "./env";
 
 const env = requireEnv(["VITE_BASE_URL", "SERVER_AUTH_SECRET", "SERVER_MAIL_FROM"]);
+const baseURL = requireHttpUrl("VITE_BASE_URL", env.VITE_BASE_URL);
+const socialProviders = getOAuthProviders();
+const escapeHtmlAttribute = (value: string) =>
+  value.replaceAll("&", "&amp;").replaceAll('"', "&quot;").replaceAll("<", "&lt;");
 
 export const auth = betterAuth({
-  baseURL: env.VITE_BASE_URL,
+  baseURL,
   secret: env.SERVER_AUTH_SECRET,
+  trustedOrigins: [baseURL],
+  rateLimit: {
+    enabled: true,
+    storage: "memory",
+    window: 60,
+    max: 100,
+    customRules: {
+      "/sign-in/email": { window: 60, max: 10 },
+      "/sign-up/email": { window: 60, max: 5 },
+      "/forget-password": { window: 60, max: 3 },
+      "/request-password-reset": { window: 60, max: 3 },
+      "/reset-password": { window: 60, max: 5 },
+      "/send-verification-email": { window: 60, max: 3 },
+      "/verify-email": { window: 60, max: 10 },
+    },
+  },
   telemetry: {
     enabled: false,
   },
@@ -32,16 +52,7 @@ export const auth = betterAuth({
     },
   },
 
-  /* socialProviders: {
-    github: {
-      clientId: process.env.SERVER_GITHUB_CLIENT_ID as string,
-      clientSecret: process.env.SERVER_GITHUB_CLIENT_SECRET as string,
-    },
-    google: {
-      clientId: process.env.SERVER_GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.SERVER_GOOGLE_CLIENT_SECRET as string,
-    },
-  }, */
+  socialProviders,
 
   // https://www.better-auth.com/docs/authentication/email-password
   emailAndPassword: {
@@ -53,7 +64,7 @@ export const auth = betterAuth({
         from: env.SERVER_MAIL_FROM,
         to: user.email,
         subject: "TANSTARTER - Reset your password",
-        html: `<p>Reset your password by clicking <a href="${url}">here</a></p>`,
+        html: `<p>Reset your password by clicking <a href="${escapeHtmlAttribute(url)}">here</a></p>`,
       });
     },
   },
@@ -66,7 +77,7 @@ export const auth = betterAuth({
         from: env.SERVER_MAIL_FROM,
         to: user.email,
         subject: "TANSTARTER - Verify your email",
-        html: `<p>Verify your email by clicking <a href="${url}">here</a></p>`,
+        html: `<p>Verify your email by clicking <a href="${escapeHtmlAttribute(url)}">here</a></p>`,
       });
     },
   },

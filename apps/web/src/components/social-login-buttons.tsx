@@ -1,6 +1,7 @@
 import { authClient } from "@repo/auth/auth-client";
 import { Button } from "@repo/ui/components/button";
 import { Spinner } from "@repo/ui/components/spinner";
+import { cn } from "@repo/ui/lib/utils";
 import {
   IconBrandAppleFilled,
   IconBrandDiscordFilled,
@@ -107,11 +108,13 @@ export function SocialLoginButtons({
   };
 
   return (
-    <div
-      className={providers.length > 1 ? "grid gap-2 lg:grid-cols-2" : "flex flex-col"}
-      role="group"
-      aria-label={`${actionLabel} with social providers`}
+    <fieldset
+      className={cn(
+        "m-0 min-w-0 border-0 p-0",
+        providers.length > 1 ? "grid gap-2 lg:grid-cols-2" : "flex flex-col",
+      )}
     >
+      <legend className="sr-only">{actionLabel} with social providers</legend>
       {providers.map((providerId) => {
         const config = PROVIDER_CONFIG[providerId];
         if (!config) return null;
@@ -141,6 +144,6 @@ export function SocialLoginButtons({
           </Button>
         );
       })}
-    </div>
+    </fieldset>
   );
 }

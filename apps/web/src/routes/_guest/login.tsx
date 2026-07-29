@@ -1,4 +1,5 @@
 import { authClient } from "@repo/auth/auth-client";
+import { $getOAuthProviders } from "@repo/auth/tanstack/functions";
 import { Button } from "@repo/ui/components/button";
 import { Field, FieldGroup } from "@repo/ui/components/field";
 import { cn } from "@repo/ui/lib/utils";
@@ -11,9 +12,11 @@ import { z } from "zod";
 
 import { useAppForm } from "@/components/form";
 import { SocialLoginButtons } from "@/components/social-login-buttons";
+import { safeInternalRedirectPath } from "@/lib/safe-redirect";
 
 export const Route = createFileRoute("/_guest/login")({
   component: LoginForm,
+  loader: () => $getOAuthProviders(),
 });
 
 const formValidator = z.object({
@@ -25,6 +28,8 @@ function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"form
   const id = useId();
 
   const { redirectUrl } = Route.useRouteContext();
+  const providers = Route.useLoaderData();
+  const safeRedirectUrl = safeInternalRedirectPath(redirectUrl);
 
   const form = useAppForm({
     defaultValues: {
@@ -40,7 +45,7 @@ function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"form
       await authClient.signIn.email(
         {
           ...value,
-          callbackURL: redirectUrl,
+          callbackURL: safeRedirectUrl,
         },
         {
           onError: ({ error }) => {
@@ -52,7 +57,7 @@ function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"form
                     await authClient.sendVerificationEmail(
                       {
                         email: value.email,
-                        callbackURL: redirectUrl,
+                        callbackURL: safeRedirectUrl,
                       },
                       {
                         onSuccess: () => {
@@ -62,8 +67,9 @@ function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"form
                         },
                         onError: ({ error }) => {
                           toast.error(
-                            error.message ||
-                              "An error occurred while resending the verification email.",
+                            import.meta.env.DEV && error.message
+                              ? error.message
+                              : "The verification email could not be sent. Please try again later.",
                           );
                         },
                       },
@@ -75,7 +81,11 @@ function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"form
               return;
             }
 
-            toast.error(error.message || "An error occurred while signing in.");
+            toast.error(
+              import.meta.env.DEV && error.message
+                ? error.message
+                : "Unable to sign in with those credentials.",
+            );
           },
           // better-auth seems to trigger a hard navigation on login,
           // so we don't have to revalidate & navigate ourselves
@@ -134,11 +144,13 @@ function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"form
             <form.SubmitButton label="Login" loadingLabel="Logging in..." />
           </form.AppForm>
 
-          <SocialLoginButtons
-            callbackURL={redirectUrl}
-            actionLabel="Login"
-            providers={["google", "github"]}
-          />
+          {providers.length > 0 ? (
+            <SocialLoginButtons
+              callbackURL={safeRedirectUrl}
+              actionLabel="Login"
+              providers={providers}
+            />
+          ) : null}
         </Field>
 
         <Field className="w-fit self-center">
