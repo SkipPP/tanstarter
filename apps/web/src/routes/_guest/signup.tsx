@@ -1,11 +1,10 @@
 import { authClient } from "@repo/auth/auth-client";
-import { authQueryOptions } from "@repo/auth/tanstack/queries";
+import { $getOAuthProviders } from "@repo/auth/tanstack/functions";
 import { Button } from "@repo/ui/components/button";
 import { Field, FieldGroup } from "@repo/ui/components/field";
 import { cn } from "@repo/ui/lib/utils";
 import { IconArrowLeft } from "@tabler/icons-react";
 import { revalidateLogic } from "@tanstack/react-form-start";
-import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useId } from "react";
 import { toast } from "sonner";
@@ -13,9 +12,11 @@ import z from "zod";
 
 import { useAppForm } from "@/components/form";
 import { SocialLoginButtons } from "@/components/social-login-buttons";
+import { safeInternalRedirectPath } from "@/lib/safe-redirect";
 
 export const Route = createFileRoute("/_guest/signup")({
   component: SignupForm,
+  loader: () => $getOAuthProviders(),
 });
 
 const formValidator = z
@@ -33,9 +34,10 @@ const formValidator = z
 function SignupForm({ className, ...props }: React.ComponentPropsWithoutRef<"form">) {
   const id = useId();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
 
   const { redirectUrl } = Route.useRouteContext();
+  const providers = Route.useLoaderData();
+  const safeRedirectUrl = safeInternalRedirectPath(redirectUrl);
 
   const form = useAppForm({
     defaultValues: {
@@ -55,7 +57,7 @@ function SignupForm({ className, ...props }: React.ComponentPropsWithoutRef<"for
           name: value.name,
           email: value.email,
           password: value.password,
-          callbackURL: redirectUrl,
+          callbackURL: safeRedirectUrl,
         },
         {
           onSuccess: async () => {
@@ -63,11 +65,14 @@ function SignupForm({ className, ...props }: React.ComponentPropsWithoutRef<"for
               description: "Please check your email for verification.",
             });
 
-            queryClient.removeQueries({ queryKey: authQueryOptions().queryKey });
-            await navigate({ to: redirectUrl });
+            await navigate({ to: "/login" });
           },
           onError: ({ error }) => {
-            toast.error(error.message || "An error occurred while signing up.");
+            toast.error(
+              import.meta.env.DEV && error.message
+                ? error.message
+                : "Unable to create the account. Please try again later.",
+            );
           },
         },
       );
@@ -132,11 +137,13 @@ function SignupForm({ className, ...props }: React.ComponentPropsWithoutRef<"for
             <form.SubmitButton label="Create Account" loadingLabel="Creating account..." />
           </form.AppForm>
 
-          <SocialLoginButtons
-            callbackURL={redirectUrl}
-            actionLabel="Sign up"
-            providers={["google", "github"]}
-          />
+          {providers.length > 0 ? (
+            <SocialLoginButtons
+              callbackURL={safeRedirectUrl}
+              actionLabel="Sign up"
+              providers={providers}
+            />
+          ) : null}
         </Field>
 
         <Field className="w-fit self-center">

@@ -1,8 +1,9 @@
 import { authClient } from "@repo/auth/auth-client";
+import { Button } from "@repo/ui/components/button";
 import { FieldGroup } from "@repo/ui/components/field";
 import { cn } from "@repo/ui/lib/utils";
 import { revalidateLogic } from "@tanstack/react-form-start";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useId } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -12,17 +13,8 @@ import { useAppForm } from "@/components/form";
 export const Route = createFileRoute("/_guest/reset-password")({
   component: ResetPasswordForm,
   validateSearch: z.object({
-    token: z.string().nonempty("Token is required"),
+    token: z.string().min(1).optional(),
   }),
-  beforeLoad: ({ search }) => {
-    if (!search.token) {
-      throw new Error("Token is missing");
-    }
-
-    return {
-      token: search.token,
-    };
-  },
 });
 
 const formValidator = z
@@ -52,6 +44,11 @@ function ResetPasswordForm({ className, ...props }: React.ComponentPropsWithoutR
     },
     validationLogic: revalidateLogic(),
     onSubmit: async ({ value }) => {
+      if (!token) {
+        toast.error("This password reset link is invalid.");
+        return;
+      }
+
       await authClient.resetPassword(
         {
           token,
@@ -65,12 +62,28 @@ function ResetPasswordForm({ className, ...props }: React.ComponentPropsWithoutR
             await navigate({ to: "/login" });
           },
           onError: ({ error }) => {
-            toast.error(error.message || "An error occurred while resetting your password.");
+            toast.error(
+              import.meta.env.DEV && error.message
+                ? error.message
+                : "This password reset link is invalid or has expired.",
+            );
           },
         },
       );
     },
   });
+
+  if (!token) {
+    return (
+      <div className={cn("flex flex-col gap-6 text-center", className)}>
+        <h1 className="text-2xl font-bold">Invalid password reset link</h1>
+        <p className="text-sm text-muted-foreground">Request a new link to reset your password.</p>
+        <Button asChild>
+          <Link to="/forgot-password">Request a new link</Link>
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <form
@@ -95,13 +108,23 @@ function ResetPasswordForm({ className, ...props }: React.ComponentPropsWithoutR
 
         <form.AppField name="password">
           {(field) => (
-            <field.PasswordField label="New password" placeholder="************" required />
+            <field.PasswordField
+              label="New password"
+              placeholder="************"
+              autoComplete="new-password"
+              required
+            />
           )}
         </form.AppField>
 
         <form.AppField name="confirmPassword">
           {(field) => (
-            <field.PasswordField label="Confirm password" placeholder="************" required />
+            <field.PasswordField
+              label="Confirm password"
+              placeholder="************"
+              autoComplete="new-password"
+              required
+            />
           )}
         </form.AppField>
 

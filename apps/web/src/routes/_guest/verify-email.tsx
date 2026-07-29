@@ -1,7 +1,8 @@
 import { authClient } from "@repo/auth/auth-client";
+import { Button } from "@repo/ui/components/button";
 import { FieldGroup } from "@repo/ui/components/field";
 import { cn } from "@repo/ui/lib/utils";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -11,22 +12,13 @@ import { safeInternalRedirectPath } from "@/lib/safe-redirect";
 export const Route = createFileRoute("/_guest/verify-email")({
   component: VerifyEmailForm,
   validateSearch: z.object({
-    token: z.string().nonempty("Token is required"),
+    token: z.string().min(1).optional().catch(undefined),
     callbackURL: z
       .string()
       .optional()
+      .catch(undefined)
       .transform((value) => safeInternalRedirectPath(value ?? "/app")),
   }),
-  beforeLoad: ({ search }) => {
-    if (!search.token) {
-      throw new Error("Token is missing");
-    }
-
-    return {
-      token: search.token,
-      callbackURL: search.callbackURL,
-    };
-  },
 });
 
 function VerifyEmailForm({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
@@ -38,6 +30,11 @@ function VerifyEmailForm({ className, ...props }: React.ComponentPropsWithoutRef
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!token) {
+      setErrorMessage("This verification link is invalid or has expired.");
+      return;
+    }
+
     if (hasStartedRef.current) return;
     hasStartedRef.current = true;
 
@@ -59,7 +56,10 @@ function VerifyEmailForm({ className, ...props }: React.ComponentPropsWithoutRef
           await navigate({ to: callbackURL });
         },
         onError: ({ error }) => {
-          const message = error.message || "An error occurred while verifying your email.";
+          const message =
+            import.meta.env.DEV && error.message
+              ? error.message
+              : "This verification link is invalid or has expired.";
 
           setErrorMessage(message);
           toast.error(message);
@@ -78,7 +78,12 @@ function VerifyEmailForm({ className, ...props }: React.ComponentPropsWithoutRef
         </div>
 
         {errorMessage ? (
-          <div className="text-center text-sm text-destructive">{errorMessage}</div>
+          <>
+            <div className="text-center text-sm text-destructive">{errorMessage}</div>
+            <Button asChild variant="outline">
+              <Link to="/login">Return to login</Link>
+            </Button>
+          </>
         ) : (
           <div className="text-center text-sm text-muted-foreground">
             This should only take a moment.
