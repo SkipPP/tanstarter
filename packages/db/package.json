@@ -9,11 +9,10 @@
   },
   "scripts": {
     "db": "drizzle-kit",
-    "auth:generate": "npx https://pkg.pr.new/auth@9489 generate --config ../auth/src/auth.ts --y --output ./src/schema/auth.schema.ts"
+    "auth:generate": "pnpm dlx @better-auth/cli@1.4.21 generate --config ../auth/src/auth.ts --y --output ./src/schema/auth.schema.ts"
   },
   "dependencies": {
     "drizzle-orm": "catalog:",
-    "nanoid": "catalog:",
     "postgres": "catalog:"
   },
   "devDependencies": {

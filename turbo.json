@@ -1,7 +1,7 @@
 {
   "$schema": "https://turborepo.com/schema.json",
   "ui": "tui",
-  "globalPassThroughEnv": ["NODE_ENV", "PROD"],
+  "globalPassThroughEnv": ["DEV", "NODE_ENV", "PROD"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
@@ -17,7 +17,7 @@
       "env": ["SERVER_*", "VITE_*"]
     },
     "//#quality": {
-      "dependsOn": ["//#lint", "//#format"]
+      "dependsOn": ["//#lint", "//#format:check"]
     },
     "//#quality:fix": {
       "dependsOn": ["//#lint:fix", "//#format"]

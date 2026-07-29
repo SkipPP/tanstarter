@@ -17,7 +17,7 @@
     "db": "pnpm --filter=@repo/db run db",
     "ui": "pnpm --filter=@repo/ui run ui",
     "ui:web": "pnpm --filter=@repo/web run ui",
-    "auth:secret": "pnpm dlx @better-auth/cli@latest secret",
+    "auth:secret": "pnpm dlx @better-auth/cli@1.4.21 secret",
     "auth:generate": "pnpm --filter=@repo/db run auth:generate",
     "skills": "pnpm dlx skills@latest"
   },
@@ -25,18 +25,14 @@
     "@tanstack/eslint-plugin-query": "catalog:",
     "@tanstack/eslint-plugin-router": "catalog:",
     "eslint-plugin-turbo": "catalog:",
-    "lint-staged": "catalog:",
     "oxfmt": "catalog:",
     "oxlint": "catalog:",
     "oxlint-tsgolint": "catalog:",
     "tsx": "catalog:",
     "turbo": "catalog:"
   },
-  "lint-staged": {
-    "*": "oxfmt --no-error-on-unmatched-pattern"
-  },
   "engines": {
     "node": ">=24"
   },
-  "packageManager": "pnpm@11.5.2"
+  "packageManager": "pnpm@11.17.0"
 }
