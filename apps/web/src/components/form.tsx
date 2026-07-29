@@ -124,7 +124,7 @@ export const PasswordField = ({
           type={showPassword ? "text" : "password"}
         />
 
-        <InputGroupAddon align="inline-end">
+        <InputGroupAddon align="inline-end" interactive>
           <InputGroupButton
             aria-label="Toggle password visibility"
             title="Toggle password visibility"
