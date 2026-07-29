@@ -33,7 +33,7 @@ function RouteComponent() {
 
   return (
     <main className="grid min-h-svh bg-card lg:grid-cols-2">
-      <ThemeToggle className="absolute top-10 right-10 z-10" />
+      <ThemeToggle className="absolute top-10 right-10 z-10" variant="outlinebg" />
 
       <section className="flex flex-col gap-4 p-10">
         <div className="flex justify-start gap-2">

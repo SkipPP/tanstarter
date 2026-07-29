@@ -3,7 +3,7 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 
 import { parseDatabaseUrl } from "./env";
-import { relations as authRelations } from "./schema/auth.schema";
+import { authRelations } from "./schema/auth.schema";
 import { relations } from "./schema/relations";
 
 const client = postgres(parseDatabaseUrl(process.env.SERVER_DATABASE_URL), {

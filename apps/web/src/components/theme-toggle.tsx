@@ -19,6 +19,7 @@ interface ThemeToggleProps {
     | "link"
     | "default"
     | "outline"
+    | "outlinebg"
     | "destructive"
     | null
     | undefined;
