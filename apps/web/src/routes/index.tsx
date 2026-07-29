@@ -1,61 +1,47 @@
-import { useAuthSuspense } from "@repo/auth/tanstack/hooks";
 import { Button } from "@repo/ui/components/button";
-import { IconLoader } from "@tabler/icons-react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Suspense } from "react";
 
-import { SignOutButton } from "@/components/sign-out-button";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
+  head: () => ({
+    meta: [
+      { title: "TanStarter — TanStack SaaS starter" },
+      {
+        name: "description",
+        content:
+          "A production-minded TanStack Start monorepo starter for building TypeScript SaaS applications.",
+      },
+    ],
+  }),
 });
 
 function HomePage() {
   return (
-    <section className="flex min-h-svh flex-col items-center justify-center gap-10 p-2">
+    <main className="flex min-h-svh flex-col items-center justify-center gap-10 p-2">
       <div className="flex flex-col items-center gap-2">
         <h1 className="text-3xl font-bold sm:text-4xl">TanStarter</h1>
 
         <div className="mb-4 flex flex-col items-center gap-2 text-sm text-foreground/80">
-          This is an unprotected page:
+          A production-minded TanStack Start SaaS starter.
           <pre className="rounded-md border bg-card p-1 text-xs text-card-foreground">
             routes/index.tsx
           </pre>
         </div>
       </div>
 
-      <Suspense fallback={<IconLoader className="animate-spin" />}>
-        <UserAction />
-      </Suspense>
-
-      <ThemeToggle className="absolute top-10 right-10 z-10" />
-    </section>
-  );
-}
-
-function UserAction() {
-  const { user } = useAuthSuspense();
-
-  return user ? (
-    <div className="flex flex-col items-center gap-2">
-      <p>Welcome back, {user.name}!</p>
-
-      <div className="grid grid-cols-2 gap-2">
+      <div className="flex flex-wrap justify-center gap-2">
         <Button asChild>
-          <Link to="/app">Go to App</Link>
+          <Link to="/app">Open the app</Link>
         </Button>
 
-        <SignOutButton />
+        <Button asChild variant="outline">
+          <Link to="/login">Log in</Link>
+        </Button>
       </div>
-    </div>
-  ) : (
-    <div className="flex flex-col items-center gap-2">
-      <p>You are not signed in.</p>
 
-      <Button asChild className="w-fit">
-        <Link to="/login">Log in</Link>
-      </Button>
-    </div>
+      <ThemeToggle className="absolute top-10 right-10 z-10" />
+    </main>
   );
 }

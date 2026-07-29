@@ -20,9 +20,9 @@ function AppLayout() {
       <SidebarInset>
         <SiteHeader />
 
-        <section className="@container/main flex flex-1 flex-col gap-2">
+        <main className="@container/main flex flex-1 flex-col gap-2">
           <Outlet />
-        </section>
+        </main>
       </SidebarInset>
     </SidebarProvider>
   );
