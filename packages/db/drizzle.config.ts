@@ -1,12 +1,15 @@
+import { existsSync } from "node:fs";
 import { loadEnvFile } from "node:process";
 
 import type { Config } from "drizzle-kit";
 
-loadEnvFile("../../apps/web/.env");
+import { parseDatabaseUrl } from "./src/env";
 
-if (!process.env.SERVER_DATABASE_URL) {
-  throw new Error("Missing environment variable: SERVER_DATABASE_URL");
+if (existsSync("../../apps/web/.env")) {
+  loadEnvFile("../../apps/web/.env");
 }
+
+const databaseUrl = process.env.SERVER_DATABASE_URL;
 
 export default {
   out: "./migrations",
@@ -16,7 +19,5 @@ export default {
   strict: true,
 
   dialect: "postgresql",
-  dbCredentials: {
-    url: process.env.SERVER_DATABASE_URL as string,
-  },
+  ...(databaseUrl ? { dbCredentials: { url: parseDatabaseUrl(databaseUrl) } } : {}),
 } satisfies Config;
