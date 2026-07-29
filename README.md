@@ -42,7 +42,7 @@ A minimal monorepo starter for 🏝️ TanStack Start.
 1. Clone this repository with gitpick, then install dependencies:
 
    ```sh
-   npx gitpick skippp/tanstarter myproject
+   pnpm dlx gitpick skippp/tanstarter myproject
    cd myproject
 
    pnpm install
@@ -50,9 +50,10 @@ A minimal monorepo starter for 🏝️ TanStack Start.
 
 2. Create `.env` files in [`/apps/web`](./apps/web/.env.example), based on the `.env.example` file. See [Required environment variables](#required-environment-variables) below.
 
-3. Generate the initial migration with drizzle-kit, then apply to your database:
+3. Start PostgreSQL, generate the initial migration with Drizzle Kit, then apply it:
 
    ```sh
+   docker compose --env-file apps/web/.env up -d db
    pnpm db generate
    pnpm db migrate
    ```
@@ -69,32 +70,40 @@ A minimal monorepo starter for 🏝️ TanStack Start.
 
 Set these in `apps/web/.env` (and in your deployment environment). Copy from [`apps/web/.env.example`](./apps/web/.env.example).
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `VITE_BASE_URL` | Yes | Public URL of the app (e.g. `http://localhost:3000`). |
-| `SERVER_DATABASE_URL` | Yes | PostgreSQL connection string. |
-| `SERVER_AUTH_SECRET` | Yes | Secret for signing sessions. Generate one with **`pnpm auth:secret`**. |
-| `SERVER_RESEND_API_KEY` | Yes | Resend API key for sending verification and password-reset emails. |
-| `SERVER_MAIL_FROM` | Yes | "From" address for transactional emails (e.g. `noreply@yourdomain.com`). |
-| `SERVER_GITHUB_CLIENT_ID` / `SERVER_GITHUB_CLIENT_SECRET` | No | For GitHub OAuth. |
-| `SERVER_GOOGLE_CLIENT_ID` / `SERVER_GOOGLE_CLIENT_SECRET` | No | For Google OAuth. |
+| Variable                                                  | Required | Description                                                              |
+| --------------------------------------------------------- | -------- | ------------------------------------------------------------------------ |
+| `VITE_BASE_URL`                                           | Yes      | Public URL of the app (e.g. `http://localhost:3000`).                    |
+| `SERVER_DATABASE_URL`                                     | Yes      | PostgreSQL connection string.                                            |
+| `SERVER_AUTH_SECRET`                                      | Yes      | Secret for signing sessions. Generate one with **`pnpm auth:secret`**.   |
+| `SERVER_RESEND_API_KEY`                                   | Yes      | Resend API key for sending verification and password-reset emails.       |
+| `SERVER_MAIL_FROM`                                        | Yes      | "From" address for transactional emails (e.g. `noreply@yourdomain.com`). |
+| `SERVER_GITHUB_CLIENT_ID` / `SERVER_GITHUB_CLIENT_SECRET` | No       | For GitHub OAuth.                                                        |
+| `SERVER_GOOGLE_CLIENT_ID` / `SERVER_GOOGLE_CLIENT_SECRET` | No       | For Google OAuth.                                                        |
 
-In multiple environments (staging, production), set `VITE_BASE_URL` to the correct app URL for that environment (no trailing slash, correct scheme).
+The PostgreSQL container and the application both use `apps/web/.env`; pass that file to Compose with `--env-file apps/web/.env`. Replace the example database password before using it outside local development. In staging and production, set `VITE_BASE_URL` to the public origin (scheme and host, without a path).
 
 ## Deploying to production
 
-The [vite config](./apps/web/vite.config.ts#L15-L16) is currently configured to use Nitro v3 to deploy on Vercel, but supports many other [deployment presets](https://v3.nitro.build/deploy) like Node.
+Build and run the Nitro output with:
+
+```sh
+pnpm build
+pnpm --filter @repo/web start
+```
+
+The [Vite config](./apps/web/vite.config.ts) uses the official Nitro v3 beta. Configure a [Nitro deployment preset](https://v3.nitro.build/deploy) when targeting a platform other than the default Node server.
 
 Refer to the [TanStack Start hosting docs](https://tanstack.com/start/latest/docs/framework/react/guide/hosting) for deploying to other platforms.
+
+CI installs from the frozen lockfile, then runs lint, the non-mutating format check, the production build, and a production dependency audit that blocks critical advisories. Pre-GA framework dependencies can still report upstream high-severity advisories, so review the full `pnpm audit --prod` output during dependency updates. CI uses non-sensitive placeholder environment values; runtime secrets must still be supplied by the deployment platform.
 
 ## Issue watchlist
 
 - [Router/Start issues](https://github.com/TanStack/router/issues) - TanStack Start is in RC.
 - [Devtools releases](https://github.com/TanStack/devtools/releases) - TanStack Devtools is in alpha and may still have breaking changes.
-- [Vite 8 beta](https://vite.dev/blog/announcing-vite8-beta) - We're using Vite 8 beta which is powered by Rolldown.
-- [Nitro v3 nightly](https://v3.nitro.build/docs/nightly) - This template is configured with Nitro v3 nightly by default.
-- [Drizzle ORM v1 Beta](https://orm.drizzle.team/docs/relations-v1-v2) - Drizzle ORM v1 is in beta with relations v2.
-- [Better Auth beta](https://github.com/better-auth/better-auth/pull/6913) - We're using a separate branch of Better Auth v1.5 that supports Drizzle relations v2.
+- [Nitro v3](https://v3.nitro.build/) - Nitro v3 remains beta and is pinned exactly.
+- [Drizzle ORM v1](https://orm.drizzle.team/docs/relations-v1-v2) - Drizzle ORM v1 remains RC and is pinned exactly for Relations v2.
+- [Better Auth releases](https://github.com/better-auth/better-auth/releases) - Better Auth 1.7 remains RC; the Relations v2 adapter is pinned through the `@better-auth/drizzle-adapter` catalog alias.
 
 ## Goodies
 
@@ -104,7 +113,7 @@ This template is configured for **[pnpm](https://pnpm.io/)** by default. Check t
 
 - **`auth:generate`** - Regenerate the [auth db schema](./packages/db/src/schema/auth.schema.ts) if you've made changes to your Better Auth [config](./packages/auth/src/auth.ts).
 - **`ui`** - The shadcn/ui CLI. (e.g. `pnpm ui add button`)
-- **`format`**, **`lint`** - Run Oxfmt and Oxlint, or both via `pnpm check`.
+- **`format`**, **`format:check`**, **`lint`** - Format, verify formatting without modifying files, and run type-aware linting. `pnpm check` runs the non-mutating checks.
 - **`deps`** - Selectively upgrade dependencies via taze.
 
 > [!NOTE]

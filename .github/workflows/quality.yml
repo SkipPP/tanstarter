@@ -1,0 +1,32 @@
+name: Quality
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      VITE_BASE_URL: http://localhost:3000
+      SERVER_DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+      SERVER_AUTH_SECRET: ci-only-secret-ci-only-secret-ci-only-secret
+      SERVER_MAIL_FROM: ci@example.com
+      SERVER_RESEND_API_KEY: ci-not-used
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm format:check
+      - run: pnpm build
+      - run: pnpm audit --prod --audit-level critical

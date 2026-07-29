@@ -2,14 +2,14 @@ import "@tanstack/react-start/server-only";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 
+import { parseDatabaseUrl } from "./env";
 import { relations as authRelations } from "./schema/auth.schema";
 import { relations } from "./schema/relations";
 
-if (!process.env.SERVER_DATABASE_URL) {
-  throw new Error("Missing environment variable: SERVER_DATABASE_URL");
-}
-
-const client = postgres(process.env.SERVER_DATABASE_URL as string, { max: 1, prepare: false });
+const client = postgres(parseDatabaseUrl(process.env.SERVER_DATABASE_URL), {
+  max: 1,
+  prepare: false,
+});
 
 export const db = drizzle({
   client,

@@ -3,18 +3,16 @@ services:
     image: postgres:18
     container_name: tanstarter-database
     restart: unless-stopped
-    env_file:
-      - ./packages/db/.env
     environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB:-tanstarter-database}
+      POSTGRES_USER: ${POSTGRES_USER:?Set POSTGRES_USER in apps/web/.env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in apps/web/.env}
+      POSTGRES_DB: ${POSTGRES_DB:?Set POSTGRES_DB in apps/web/.env}
     ports:
       - "127.0.0.1:5432:5432"
     volumes:
       - tanstarter-database-data:/var/lib/postgresql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres || pg_isready"]
+      test: ["CMD-SHELL", 'pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"']
       interval: 10s
       timeout: 5s
       retries: 5
